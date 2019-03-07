@@ -1,6 +1,8 @@
 export default function(values) {
   const errors = {};
-  const requiredFields = ["email", "password", "passwordRe"];
+  const requiredFields = values.passwordRe
+    ? ["email", "password", "passwordRe"]
+    : ["email", "password"];
   requiredFields.forEach(field => {
     if (!values[field]) {
       errors[field] = "Required";
