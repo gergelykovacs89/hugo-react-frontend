@@ -3,14 +3,14 @@ import { reduxForm } from "redux-form";
 import validate from "../../helpers/validate";
 import AuthForm from "./AuthForm";
 
-class Register extends React.Component {
+class Login extends React.Component {
   render() {
-    return <AuthForm title="Register"/>;
+    return <AuthForm title="Login"/>;
   }
 }
 
 
 export default reduxForm({
-  form: "Register",
+  form: "Login",
   validate
-})(Register);
+})(Login);
