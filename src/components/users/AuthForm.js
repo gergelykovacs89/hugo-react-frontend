@@ -1,13 +1,13 @@
 import React from "react";
+import { Field, reduxForm } from "redux-form";
+import validate from "../../helpers/validate";
 import PropTypes from "prop-types";
 import {
   Paper,
   Avatar,
   Typography,
-  FormControl,
-  InputLabel,
-  Input,
-  Button
+  Button,
+  TextField
 } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -49,21 +49,42 @@ class AuthForm extends React.Component {
   renderRePassword() {
     if (this.props.title !== "Login") {
       return (
-        <FormControl margin="normal" required fullWidth>
-          <InputLabel htmlFor="passwordRe">Re-type password</InputLabel>
-          <Input
+        <div>
+          <Field
             name="passwordRe"
+            component={this.renderTextField}
+            label="Re-type password"
             type="password"
-            id="passwordRe"
-            autoComplete="current-password"
+            fullWidth
+            autoComplete="off"
           />
-        </FormControl>
+        </div>
       );
     }
   }
 
+  renderTextField = ({
+    label,
+    input,
+    meta: { touched, invalid, error },
+    ...custom
+  }) => (
+    <TextField
+      label={label}
+      placeholder={label}
+      error={touched && invalid}
+      helperText={touched && error}
+      {...input}
+      {...custom}
+    />
+  );
+
+  onSubmit = formValues => {
+    this.props.onSubmit(formValues);
+  };
+
   render() {
-    const { classes, title } = this.props;
+    const { handleSubmit, pristine, submitting, classes, title } = this.props;
     return (
       <main className={classes.main}>
         <Paper className={classes.paper}>
@@ -73,20 +94,30 @@ class AuthForm extends React.Component {
           <Typography component="h1" variant="h5">
             {title}
           </Typography>
-          <form className={classes.registerForm}>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="email">Email Address</InputLabel>
-              <Input id="email" name="email" autoComplete="email" autoFocus />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <Input
-                name="password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
+          <form
+            className={classes.registerForm}
+            onSubmit={handleSubmit(this.onSubmit)}
+          >
+            <div>
+              <Field
+                name="email"
+                type="email"
+                component={this.renderTextField}
+                label="Email Address"
+                fullWidth
+                autoComplete="off"
               />
-            </FormControl>
+            </div>
+            <div>
+              <Field
+                name="password"
+                component={this.renderTextField}
+                label="Password"
+                type="password"
+                fullWidth
+                autoComplete="off"
+              />
+            </div>
             {this.renderRePassword()}
             <Button
               type="submit"
@@ -94,6 +125,7 @@ class AuthForm extends React.Component {
               variant="contained"
               color="default"
               className={classes.submit}
+              disabled={pristine || submitting}
             >
               {title}
             </Button>
@@ -105,7 +137,11 @@ class AuthForm extends React.Component {
 }
 
 AuthForm.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func
 };
 
-export default withStyles(styles)(AuthForm);
+export default reduxForm({
+  form: "userForm",
+  validate
+})(withStyles(styles)(AuthForm));

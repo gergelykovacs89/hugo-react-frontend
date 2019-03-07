@@ -1,16 +1,13 @@
 import React from "react";
-import { reduxForm } from "redux-form";
-import validate from "../../helpers/validate";
 import AuthForm from "./AuthForm";
 
 class Login extends React.Component {
+  onSubmit = formValues => {
+    console.log(formValues);
+  };
   render() {
-    return <AuthForm title="Login"/>;
+    return <AuthForm title="Login" onSubmit={this.onSubmit} />;
   }
 }
 
-
-export default reduxForm({
-  form: "Login",
-  validate
-})(Login);
+export default Login;
