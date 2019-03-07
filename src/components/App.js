@@ -1,21 +1,25 @@
 import React, { Fragment } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { Header, Footer } from "./layouts";
+import { Router, Route, Switch } from "react-router-dom";
+import { Header, /* Footer */ } from "./layouts";
 import Authors from "./authors";
-import { Register } from "./users";
+import { Register, Login } from "./users";
+import history from "../history";
 
 class App extends React.Component {
   render() {
     return (
       <Fragment>
-        <Header />
-        <BrowserRouter>
-          <Switch>
-            <Route path="/select-author" exact component={Authors} />
-            <Route path="/register" exact component={Register} />
-          </Switch>
-        </BrowserRouter>
-        <Footer />
+        <Router history={history}>
+          <div>
+            <Header />
+            <Switch>
+              <Route path="/select-author" exact component={Authors} />
+              <Route path="/register" exact component={Register} />
+              <Route path="/login" exact component={Login} />
+            </Switch>
+          </div>
+        </Router>
+        {/* <Footer /> */}
       </Fragment>
     );
   }
