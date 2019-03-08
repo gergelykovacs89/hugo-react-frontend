@@ -1,6 +1,5 @@
 import React from "react";
 import { Field, reduxForm } from "redux-form";
-import validate from "../../helpers/validate";
 import PropTypes from "prop-types";
 import {
   Paper,
@@ -46,7 +45,14 @@ const styles = theme => ({
 });
 
 class AuthForm extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      errors: {}
+    };
+  }
   renderRePassword() {
+    console.log(this.state.errors["passwordRe"] !== undefined);
     if (this.props.title !== "Login") {
       return (
         <div>
@@ -55,6 +61,8 @@ class AuthForm extends React.Component {
             component={this.renderTextField}
             label="Re-type password"
             type="password"
+            error={this.state.errors["passwordRe"] !== undefined}
+            helperText={this.state.errors["passwordRe"]}
             fullWidth
             autoComplete="off"
           />
@@ -83,7 +91,17 @@ class AuthForm extends React.Component {
     this.props.onSubmit(formValues);
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
+
   render() {
+    const { errors } = this.state;
+    console.log(errors);
     const { handleSubmit, pristine, submitting, classes, title } = this.props;
     return (
       <main className={classes.main}>
@@ -104,6 +122,8 @@ class AuthForm extends React.Component {
                 type="email"
                 component={this.renderTextField}
                 label="Email Address"
+                error={errors["email"] !== undefined}
+                helperText={errors["email"]}
                 fullWidth
                 autoComplete="off"
               />
@@ -114,6 +134,8 @@ class AuthForm extends React.Component {
                 component={this.renderTextField}
                 label="Password"
                 type="password"
+                error={errors["password"] !== undefined}
+                helperText={errors["password"]}
                 fullWidth
                 autoComplete="off"
               />
@@ -142,6 +164,5 @@ AuthForm.propTypes = {
 };
 
 export default reduxForm({
-  form: "userForm",
-  validate
+  form: "userForm"
 })(withStyles(styles)(AuthForm));
