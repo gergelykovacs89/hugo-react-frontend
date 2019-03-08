@@ -52,7 +52,6 @@ class AuthForm extends React.Component {
     };
   }
   renderRePassword() {
-    console.log(this.state.errors["passwordRe"] !== undefined);
     if (this.props.title !== "Login") {
       return (
         <div>
@@ -101,7 +100,6 @@ class AuthForm extends React.Component {
 
   render() {
     const { errors } = this.state;
-    console.log(errors);
     const { handleSubmit, pristine, submitting, classes, title } = this.props;
     return (
       <main className={classes.main}>
