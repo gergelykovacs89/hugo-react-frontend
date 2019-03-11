@@ -1,16 +1,10 @@
-import {
-  REGISTER_SUCCESS,
-  LOGIN_SUCCESS,
-  SET_AUTHORS,
-  LOGOUT
-} from "../actions/types";
+import { REGISTER_SUCCESS, LOGIN_SUCCESS, LOGOUT } from "../actions/types";
 
 const INTIAL_STATE = {
   isSignedIn: null,
   userId: null,
   error: null,
-  message: null,
-  authors: []
+  message: null
 };
 
 export default (state = INTIAL_STATE, action) => {
@@ -22,11 +16,6 @@ export default (state = INTIAL_STATE, action) => {
         ...state,
         userId: action.payload._id,
         isSignedIn: true
-      };
-    case SET_AUTHORS:
-      return {
-        ...state,
-        authors: action.payload
       };
     case LOGOUT:
       return { ...state, isSignedIn: false, userId: null, authors: [] };
