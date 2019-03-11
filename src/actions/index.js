@@ -3,7 +3,8 @@ import {
   GET_ERRORS,
   LOGIN_SUCCESS,
   SET_AUTHORS,
-  LOGOUT
+  LOGOUT,
+  ADD_AUTHOR_SUCCESS
 } from "./types";
 import users from "../apis/users";
 import setAuthToken from "../helpers/setAuthToken";
@@ -38,4 +39,14 @@ export const logout = () => dispatch => {
   localStorage.removeItem("jwtToken");
   dispatch({ type: LOGOUT });
   history.push("/");
+};
+
+export const addAuthor = formValues => async (dispatch, getState) => {
+  try {
+    const response = await users.post("/new-author", formValues);
+    dispatch({ type: ADD_AUTHOR_SUCCESS, payload: response.data });
+    history.push("/login");
+  } catch (error) {
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
 };

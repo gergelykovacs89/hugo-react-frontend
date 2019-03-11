@@ -1,10 +1,11 @@
 import React, { Fragment } from "react";
 import AuthorForm from "./AuthorForm";
 import { connect } from "react-redux";
+import { addAuthor } from "../../actions";
 
 class CreateAuthor extends React.Component {
   onSubmit = formValues => {
-    console.log(formValues);
+    this.props.addAuthor(formValues);
   };
 
   render() {
@@ -29,5 +30,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  {}
+  { addAuthor }
 )(CreateAuthor);
