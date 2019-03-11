@@ -9,23 +9,27 @@ const styles = theme => ({
     flexGrow: 1
   },
   paper: {
-    marginTop: 50,
-    height: 250,
-    width: 250
+    marginTop: "14vw",
+    height: "14vw",
+    width: "14vw",
+    minWidth: "125px",
+    minHeight: "125px",
+    fontSize: "1.65vw"
   }
 });
 
 class Authors extends React.Component {
   renderAuthors = (authors, classes) => {
-    authors.map(author => (
+    return authors.map(author => (
       <Grid key={author._id} item>
-        <Paper className={classes.paper} />
+        <Paper className={classes.paper}>{author.name}</Paper>
       </Grid>
     ));
   };
 
   render() {
     const { classes, authors } = this.props;
+    console.log(authors);
     return (
       <Grid container className={classes.root} spacing={16}>
         <Grid item xs={12}>
@@ -37,11 +41,13 @@ class Authors extends React.Component {
           >
             {this.renderAuthors(authors, classes)}
             <Grid key={"createAuthor"} item>
-              <Button component={RouterLink} to="/create-author"
+              <Button
+                component={RouterLink}
+                to="/create-author"
                 color="default"
                 variant="outlined"
                 style={{
-                  marginTop: "100px",
+                  marginTop: "14vw",
                   width: "12vw",
                   height: "12vw",
                   minWidth: "100px",
@@ -60,7 +66,7 @@ class Authors extends React.Component {
 }
 
 const mapStateToProps = state => {
-  return { authors: state.user.authors };
+  return { authors: Object.values(state.authors) };
 };
 
 const AuthorsWithStyles = withStyles(styles)(Authors);

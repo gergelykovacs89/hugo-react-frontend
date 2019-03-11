@@ -50,7 +50,7 @@ export const addAuthor = formValues => async (dispatch, getState) => {
   try {
     const response = await users.post("/new-author", formValues);
     dispatch({ type: ADD_AUTHOR_SUCCESS, payload: response.data });
-    history.push("/login");
+    history.push("/select-author");
   } catch (error) {
     dispatch({ type: GET_ERRORS, payload: error.response.data });
   }

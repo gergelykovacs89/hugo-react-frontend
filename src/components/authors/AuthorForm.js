@@ -51,24 +51,7 @@ class AuthorForm extends React.Component {
       errors: {}
     };
   }
-  renderRePassword() {
-    if (this.props.title !== "Login") {
-      return (
-        <div>
-          <Field
-            name="passwordRe"
-            component={this.renderTextField}
-            label="Re-type password"
-            type="password"
-            error={this.state.errors["passwordRe"] !== undefined}
-            helperText={this.state.errors["passwordRe"]}
-            fullWidth
-            autoComplete="off"
-          />
-        </div>
-      );
-    }
-  }
+  
 
   renderTextField = ({
     label,
@@ -101,6 +84,7 @@ class AuthorForm extends React.Component {
   render() {
     const { errors } = this.state;
     const { handleSubmit, pristine, submitting, classes, title } = this.props;
+    console.log(errors);
     return (
       <main className={classes.main}>
         <Paper className={classes.paper}>
