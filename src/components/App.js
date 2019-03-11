@@ -1,7 +1,8 @@
 import React, { Fragment } from "react";
 import { Router, Route, Switch } from "react-router-dom";
-import { Header, /* Footer */ } from "./layouts";
+import { Header /* Footer */ } from "./layouts";
 import Authors from "./authors";
+import CreateAuthor from "./authors/CreateAuthor";
 import { Register, Login } from "./users";
 import history from "../history";
 
@@ -14,6 +15,7 @@ class App extends React.Component {
             <Header />
             <Switch>
               <Route path="/select-author" exact component={Authors} />
+              <Route path="/create-author" exact component={CreateAuthor} />
               <Route path="/register" exact component={Register} />
               <Route path="/login" exact component={Login} />
             </Switch>

@@ -1,9 +1,33 @@
-import React from "react";
+import React, { Fragment } from "react";
+import AuthorForm from "./AuthorForm";
+import { connect } from "react-redux";
 
 class CreateAuthor extends React.Component {
+  onSubmit = formValues => {
+    console.log(formValues);
+  };
+
   render() {
-    return <div>CreateAuthor</div>;
+    return (
+      <Fragment>
+        <AuthorForm
+          title="Create Author"
+          onSubmit={this.onSubmit}
+          errors={this.props.errors}
+        />
+      </Fragment>
+    );
   }
 }
 
-export default CreateAuthor;
+const mapStateToProps = state => {
+  return {
+    errors: state.errors,
+    message: state.user.message
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  {}
+)(CreateAuthor);
