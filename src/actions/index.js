@@ -23,9 +23,14 @@ export const registerRequest = formValues => async dispatch => {
 
 export const loginRequest = formValues => async dispatch => {
   try {
-    const response = await users.post("/login", formValues);
-    localStorage.setItem("jwtToken", response.data.jwtToken);
+    let response = null;
+    if (formValues !== null) {
+      response = await credentialsLogin(formValues);
+    } else {
+      response = await tokenLogin();
+    }
     setAuthToken(response.data.jwtToken);
+    localStorage.setItem("jwtToken", response.data.jwtToken);
     const decoded = jwt_decode(response.data.jwtToken);
     dispatch({ type: LOGIN_SUCCESS, payload: decoded });
     dispatch({ type: SET_AUTHORS, payload: response.data.authors });
@@ -49,4 +54,14 @@ export const addAuthor = formValues => async (dispatch, getState) => {
   } catch (error) {
     dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
+};
+
+const credentialsLogin = async formValues => {
+  const response = await users.post("/login", formValues);
+  return response;
+};
+const tokenLogin = async () => {
+  setAuthToken(localStorage.getItem("jwtToken"));
+  const response = await users.get("/user-authors");
+  return response;
 };

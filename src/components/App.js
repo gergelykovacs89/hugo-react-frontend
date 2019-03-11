@@ -5,8 +5,16 @@ import Authors from "./authors";
 import CreateAuthor from "./authors/CreateAuthor";
 import { Register, Login } from "./users";
 import history from "../history";
+import { loginRequest } from "../actions";
+import { connect } from "react-redux";
 
 class App extends React.Component {
+  componentDidMount() {
+    if (localStorage.getItem("jwtToken")) {
+      this.props.loginRequest(null);
+    }
+  }
+
   render() {
     return (
       <Fragment>
@@ -27,4 +35,11 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapStateToPros = state => {
+  return {};
+};
+
+export default connect(
+  mapStateToPros,
+  { loginRequest }
+)(App);
