@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, Button, Grid } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 import { logout } from "../../actions";
 import { connect } from "react-redux";
@@ -25,7 +25,7 @@ class Header extends React.Component {
 
     const authButtons = (
       <Fragment>
-        <Button onClick={this.onLogout} color="default">
+        <Button onClick={this.onLogout} color="default" style={{ flex: 1 }}>
           Logout
         </Button>
       </Fragment>
@@ -35,10 +35,18 @@ class Header extends React.Component {
       <div>
         <AppBar position="static" color="default">
           <Toolbar>
-            <Typography variant="h6" color="default">
-              hugo
-            </Typography>
-            {isSignedIn ? authButtons : guestButtons}
+            <Grid
+              justify="space-between" // Add it here :)
+              container
+              spacing={24}
+            >
+              <Grid item>
+                <Typography variant="h6" color="default">
+                  hugo
+                </Typography>
+              </Grid>
+              <Grid item>{isSignedIn ? authButtons : guestButtons}</Grid>
+            </Grid>
           </Toolbar>
         </AppBar>
       </div>
