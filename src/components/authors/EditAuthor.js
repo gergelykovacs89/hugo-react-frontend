@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import AuthorForm from "./AuthorForm";
-import { fetchAuthor } from "../../actions";
+import { fetchAuthor, editAuthor, clearErrors } from "../../actions";
 import { connect } from "react-redux";
 import _ from "lodash";
 
@@ -9,7 +9,13 @@ class EditAuthor extends React.Component {
     this.props.fetchAuthor(this.props.match.params.id);
   }
 
-  onSubmit = formValues => {};
+  componentWillUnmount() {
+    this.props.clearErrors();
+  }
+
+  onSubmit = formValues => {
+    this.props.editAuthor(formValues, this.props.match.params.id);
+  };
 
   render() {
     return (
@@ -40,5 +46,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { fetchAuthor }
+  { fetchAuthor, editAuthor, clearErrors }
 )(EditAuthor);
