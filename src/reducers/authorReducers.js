@@ -1,7 +1,9 @@
 import {
   SET_AUTHORS,
   ADD_AUTHOR_SUCCESS,
-  FETCH_AUTHOR
+  FETCH_AUTHOR,
+  EDIT_AUTHOR_SUCCESS,
+  DELETE_AUTHOR_SUCCESS
 } from "../actions/types";
 import _ from "lodash";
 
@@ -15,6 +17,10 @@ export default (state = INTIAL_STATE, action) => {
       return { ...state, [action.payload._id]: action.payload };
     case FETCH_AUTHOR:
       return { ...state, [action.payload._id]: action.payload };
+    case EDIT_AUTHOR_SUCCESS:
+      return { ...state, [action.payload._id]: action.payload };
+    case DELETE_AUTHOR_SUCCESS:
+      return _.omit(state, action.payload);
     default:
       return state;
   }

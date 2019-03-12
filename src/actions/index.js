@@ -5,7 +5,10 @@ import {
   SET_AUTHORS,
   LOGOUT,
   ADD_AUTHOR_SUCCESS,
-  FETCH_AUTHOR
+  FETCH_AUTHOR,
+  EDIT_AUTHOR_SUCCESS,
+  CLEAR_ERRORS,
+  DELETE_AUTHOR_SUCCESS
 } from "./types";
 import users from "../apis/users";
 import setAuthToken from "../helpers/setAuthToken";
@@ -47,10 +50,23 @@ export const logout = () => dispatch => {
   history.push("/");
 };
 
-export const addAuthor = formValues => async (dispatch, getState) => {
+export const addAuthor = formValues => async dispatch => {
   try {
     const response = await users.post("/new-author", formValues);
     dispatch({ type: ADD_AUTHOR_SUCCESS, payload: response.data });
+    history.push("/select-author");
+  } catch (error) {
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const editAuthor = (formValues, authorId) => async dispatch => {
+  try {
+    const response = await users.put(`/edit-author/${authorId}`, formValues);
+    dispatch({
+      type: EDIT_AUTHOR_SUCCESS,
+      payload: response.data.authorUpdated
+    });
     history.push("/select-author");
   } catch (error) {
     dispatch({ type: GET_ERRORS, payload: error.response.data });
@@ -65,6 +81,19 @@ export const fetchAuthor = authorId => async dispatch => {
   } catch (error) {
     dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
+};
+
+export const deleteAuthor = authorId => async dispatch => {
+  try {
+    await users.delete(`/delete-author/${authorId}`);
+    dispatch({ type: DELETE_AUTHOR_SUCCESS, payload: authorId });
+  } catch (error) {
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const clearErrors = () => dispatch => {
+  dispatch({ type: CLEAR_ERRORS });
 };
 
 const credentialsLogin = async formValues => {

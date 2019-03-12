@@ -83,7 +83,7 @@ class AuthorForm extends React.Component {
 
   render() {
     const { errors } = this.state;
-    const { handleSubmit, pristine, submitting, classes, title } = this.props;
+    const { handleSubmit, classes, title } = this.props;
     return (
       <main className={classes.main}>
         <Paper className={classes.paper}>
@@ -105,6 +105,7 @@ class AuthorForm extends React.Component {
                 label="Author name:"
                 error={errors["name"] !== undefined}
                 helperText={errors["name"]}
+                disabled={title === "Edit Author" ? true : false}
                 fullWidth
                 autoComplete="off"
               />
@@ -139,7 +140,6 @@ class AuthorForm extends React.Component {
               variant="contained"
               color="default"
               className={classes.submit}
-              disabled={pristine || submitting}
             >
               {title}
             </Button>
