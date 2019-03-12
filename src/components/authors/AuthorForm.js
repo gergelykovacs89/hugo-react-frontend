@@ -1,6 +1,7 @@
 import React from "react";
 import { Field, reduxForm } from "redux-form";
 import PropTypes from "prop-types";
+import { Link as RouterLink } from "react-router-dom";
 import {
   Paper,
   Avatar,
@@ -84,7 +85,6 @@ class AuthorForm extends React.Component {
   render() {
     const { errors } = this.state;
     const { handleSubmit, pristine, submitting, classes, title } = this.props;
-    console.log(errors);
     return (
       <main className={classes.main}>
         <Paper className={classes.paper}>
@@ -145,6 +145,16 @@ class AuthorForm extends React.Component {
               {title}
             </Button>
           </form>
+          <Button
+          component={RouterLink} to="/select-author"
+              type="button"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              back
+            </Button>
         </Paper>
       </main>
     );
@@ -152,8 +162,7 @@ class AuthorForm extends React.Component {
 }
 
 AuthorForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-  handleSubmit: PropTypes.func
+  classes: PropTypes.object.isRequired
 };
 
 export default reduxForm({
