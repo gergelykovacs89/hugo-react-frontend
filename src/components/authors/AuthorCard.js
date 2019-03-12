@@ -1,4 +1,5 @@
 import React from "react";
+import { Link as RouterLink } from "react-router-dom";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -42,7 +43,7 @@ function AuthorCard(props) {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
+        <Button component={RouterLink} to={`/edit-author/${author._id}`} size="small" color="primary">
           Edit
         </Button>
         <Button size="small" color="primary">

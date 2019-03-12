@@ -52,7 +52,6 @@ class AuthorForm extends React.Component {
       errors: {}
     };
   }
-  
 
   renderTextField = ({
     label,
@@ -146,15 +145,16 @@ class AuthorForm extends React.Component {
             </Button>
           </form>
           <Button
-          component={RouterLink} to="/select-author"
-              type="button"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              back
-            </Button>
+            component={RouterLink}
+            to="/select-author"
+            type="button"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            back
+          </Button>
         </Paper>
       </main>
     );
@@ -166,5 +166,6 @@ AuthorForm.propTypes = {
 };
 
 export default reduxForm({
-  form: "authorForm"
+  form: "authorForm",
+  enableReinitialize: true
 })(withStyles(styles)(AuthorForm));
