@@ -4,7 +4,8 @@ import {
   LOGIN_SUCCESS,
   SET_AUTHORS,
   LOGOUT,
-  ADD_AUTHOR_SUCCESS
+  ADD_AUTHOR_SUCCESS,
+  FETCH_AUTHOR
 } from "./types";
 import users from "../apis/users";
 import setAuthToken from "../helpers/setAuthToken";
@@ -26,6 +27,7 @@ export const loginRequest = formValues => async dispatch => {
     let response = null;
     if (formValues !== null) {
       response = await credentialsLogin(formValues);
+      history.push("/select-author");
     } else {
       response = await tokenLogin();
     }
@@ -34,7 +36,6 @@ export const loginRequest = formValues => async dispatch => {
     const decoded = jwt_decode(response.data.jwtToken);
     dispatch({ type: LOGIN_SUCCESS, payload: decoded });
     dispatch({ type: SET_AUTHORS, payload: response.data.authors });
-    history.push("/select-author");
   } catch (error) {
     dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
@@ -51,6 +52,16 @@ export const addAuthor = formValues => async (dispatch, getState) => {
     const response = await users.post("/new-author", formValues);
     dispatch({ type: ADD_AUTHOR_SUCCESS, payload: response.data });
     history.push("/select-author");
+  } catch (error) {
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const fetchAuthor = authorId => async dispatch => {
+  try {
+    setAuthToken(localStorage.getItem("jwtToken"));
+    const response = await users.get(`/get-author/${authorId}`);
+    dispatch({ type: FETCH_AUTHOR, payload: response.data.author });
   } catch (error) {
     dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
