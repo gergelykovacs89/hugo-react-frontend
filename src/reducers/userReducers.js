@@ -3,7 +3,8 @@ import {
   LOGIN_SUCCESS,
   LOGOUT,
   SELECT_AUTHOR,
-  LOGIN_START
+  LOGIN_START,
+  ONSELECT_AUTHOR
 } from "../actions/types";
 
 const INTIAL_STATE = {
@@ -38,6 +39,8 @@ export default (state = INTIAL_STATE, action) => {
       };
     case SELECT_AUTHOR:
       return { ...state, isAuthorSelected: true, authorId: action.payload };
+    case ONSELECT_AUTHOR:
+      return { ...state, isAuthorSelected: false, authorId: null };
     default:
       return state;
   }

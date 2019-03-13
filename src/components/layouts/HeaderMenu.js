@@ -3,6 +3,8 @@ import { withStyles, Menu, MenuItem, IconButton } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import HeaderAvatar from "./HeaderAvatar";
+import { connect } from "react-redux";
+import { logout, onSelectAuthor } from "../../actions";
 
 const styles = theme => ({
   sectionDesktop: {
@@ -42,6 +44,16 @@ class HeaderMenu extends React.Component {
     this.setState({ mobileMoreAnchorEl: null });
   };
 
+  onSelectAuthor = () => {
+    this.handleMenuClose();
+    this.props.onSelectAuthor();
+  };
+
+  onLogout = () => {
+    this.handleMenuClose();
+    this.props.logout();
+  };
+
   render() {
     const { anchorEl, mobileMoreAnchorEl } = this.state;
     const { classes, author } = this.props;
@@ -55,8 +67,8 @@ class HeaderMenu extends React.Component {
         open={isMenuOpen}
         onClose={this.handleMenuClose}
       >
-        <MenuItem onClick={this.handleMenuClose}>Select Author</MenuItem>
-        <MenuItem onClick={this.handleMenuClose}>Logout</MenuItem>
+        <MenuItem onClick={this.onSelectAuthor}>Select Author</MenuItem>
+        <MenuItem onClick={this.onLogout}>Logout</MenuItem>
       </Menu>
     );
 
@@ -71,10 +83,10 @@ class HeaderMenu extends React.Component {
         <MenuItem onClick={this.handleMobileMenuClose}>
           <HeaderAvatar author={author} />
         </MenuItem>
-        <MenuItem onClick={this.handleMobileMenuClose}>
+        <MenuItem onClick={this.onSelectAuthor}>
           <p>Select Author</p>
         </MenuItem>
-        <MenuItem onClick={this.handleProfileMenuOpen}>
+        <MenuItem onClick={this.onLogout}>
           <p>Logout</p>
         </MenuItem>
       </Menu>
@@ -108,4 +120,9 @@ class HeaderMenu extends React.Component {
   }
 }
 
-export default withStyles(styles)(HeaderMenu);
+const HeaderMenuWithStyles = withStyles(styles)(HeaderMenu);
+
+export default connect(
+  null,
+  { logout, onSelectAuthor }
+)(HeaderMenuWithStyles);

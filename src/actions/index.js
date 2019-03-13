@@ -10,7 +10,8 @@ import {
   CLEAR_ERRORS,
   DELETE_AUTHOR_SUCCESS,
   SELECT_AUTHOR,
-  LOGIN_START
+  LOGIN_START,
+  ONSELECT_AUTHOR
 } from "./types";
 import users from "../apis/users";
 import setAuthToken from "../helpers/setAuthToken";
@@ -106,6 +107,12 @@ export const selectAuthor = authorId => dispatch => {
   localStorage.setItem("authorId", authorId);
   dispatch({ type: SELECT_AUTHOR, payload: authorId });
   history.push(`/a/${authorId}`);
+};
+
+export const onSelectAuthor = () => dispatch => {
+  localStorage.removeItem("authorId");
+  dispatch({ type: ONSELECT_AUTHOR });
+  history.push("/select-author");
 };
 
 export const clearErrors = () => dispatch => {
