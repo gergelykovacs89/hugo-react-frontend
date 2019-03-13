@@ -18,7 +18,7 @@ export default (state = INTIAL_STATE, action) => {
         isSignedIn: true
       };
     case LOGOUT:
-      return { ...state, isSignedIn: false, userId: null, authors: [] };
+      return { ...state, isSignedIn: false, userId: null };
     default:
       return state;
   }

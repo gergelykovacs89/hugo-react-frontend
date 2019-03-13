@@ -1,12 +1,17 @@
 import React from "react";
 import AuthForm from "./AuthForm";
-import { loginRequest } from "../../actions";
+import { loginRequest, clearErrors } from "../../actions";
 import { connect } from "react-redux";
 
 class Login extends React.Component {
   onSubmit = formValues => {
     this.props.loginRequest(formValues);
   };
+
+  componentWillUnmount() {
+    this.props.clearErrors();
+  }
+
   render() {
     return (
       <AuthForm
@@ -26,5 +31,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { loginRequest }
+  { loginRequest, clearErrors }
 )(Login);

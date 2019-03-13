@@ -1,12 +1,16 @@
 import React, { Fragment } from "react";
 import AuthForm from "./AuthForm";
-import { registerRequest } from "../../actions";
+import { registerRequest, clearErrors } from "../../actions";
 import { connect } from "react-redux";
 
 class Register extends React.Component {
   onSubmit = formValues => {
     this.props.registerRequest(formValues);
   };
+
+  componentWillUnmount() {
+    this.props.clearErrors();
+  }
 
   render() {
     return (
@@ -30,5 +34,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { registerRequest }
+  { registerRequest, clearErrors }
 )(Register);

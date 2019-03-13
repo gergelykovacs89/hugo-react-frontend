@@ -3,7 +3,8 @@ import {
   ADD_AUTHOR_SUCCESS,
   FETCH_AUTHOR,
   EDIT_AUTHOR_SUCCESS,
-  DELETE_AUTHOR_SUCCESS
+  DELETE_AUTHOR_SUCCESS,
+  LOGOUT
 } from "../actions/types";
 import _ from "lodash";
 
@@ -21,6 +22,8 @@ export default (state = INTIAL_STATE, action) => {
       return { ...state, [action.payload._id]: action.payload };
     case DELETE_AUTHOR_SUCCESS:
       return _.omit(state, action.payload);
+    case LOGOUT:
+      return {};
     default:
       return state;
   }
