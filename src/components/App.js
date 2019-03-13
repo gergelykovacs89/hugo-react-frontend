@@ -8,6 +8,7 @@ import history from "../history";
 import { loginRequest } from "../actions";
 import { connect } from "react-redux";
 import EditAuthor from "./authors/EditAuthor";
+import AuthorDetail from "./authors/AuthorDetail";
 
 class App extends React.Component {
   componentDidMount() {
@@ -26,6 +27,7 @@ class App extends React.Component {
               <Route path="/select-author" exact component={Authors} />
               <Route path="/create-author" exact component={CreateAuthor} />
               <Route path="/edit-author/:id" exact component={EditAuthor} />
+              <Route path="/a/:id" exact component={AuthorDetail} />
               <Route path="/register" exact component={Register} />
               <Route path="/login" exact component={Login} />
             </Switch>
