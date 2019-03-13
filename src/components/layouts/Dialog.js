@@ -26,8 +26,6 @@ class ResponsiveDialog extends React.Component {
   };
 
   render() {
-    const { fullScreen } = this.props;
-
     return (
       <div>
         <Button
@@ -39,7 +37,7 @@ class ResponsiveDialog extends React.Component {
           {this.props.buttonTitle}
         </Button>
         <Dialog
-          fullScreen={fullScreen}
+          fullScreen={false}
           open={this.state.open}
           onClose={this.handleClose}
           aria-labelledby="responsive-dialog-title"
