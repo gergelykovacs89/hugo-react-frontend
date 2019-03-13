@@ -9,7 +9,8 @@ import {
   EDIT_AUTHOR_SUCCESS,
   CLEAR_ERRORS,
   DELETE_AUTHOR_SUCCESS,
-  SELECT_AUTHOR
+  SELECT_AUTHOR,
+  LOGIN_START
 } from "./types";
 import users from "../apis/users";
 import setAuthToken from "../helpers/setAuthToken";
@@ -27,6 +28,7 @@ export const registerRequest = formValues => async dispatch => {
 };
 
 export const loginRequest = formValues => async dispatch => {
+  dispatch({ type: LOGIN_START });
   try {
     let response = null;
     if (formValues !== null) {
@@ -40,6 +42,12 @@ export const loginRequest = formValues => async dispatch => {
     const decoded = jwt_decode(response.data.jwtToken);
     dispatch({ type: LOGIN_SUCCESS, payload: decoded });
     dispatch({ type: SET_AUTHORS, payload: response.data.authors });
+    if (localStorage.getItem("authorId")) {
+      dispatch({
+        type: SELECT_AUTHOR,
+        payload: localStorage.getItem("authorId")
+      });
+    }
   } catch (error) {
     dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
@@ -47,6 +55,7 @@ export const loginRequest = formValues => async dispatch => {
 
 export const logout = () => dispatch => {
   localStorage.removeItem("jwtToken");
+  localStorage.removeItem("authorId");
   dispatch({ type: LOGOUT });
   history.push("/");
 };
@@ -96,6 +105,7 @@ export const deleteAuthor = authorId => async dispatch => {
 export const selectAuthor = authorId => dispatch => {
   localStorage.setItem("authorId", authorId);
   dispatch({ type: SELECT_AUTHOR, payload: authorId });
+  history.push(`/a/${authorId}`);
 };
 
 export const clearErrors = () => dispatch => {

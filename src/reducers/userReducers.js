@@ -2,13 +2,14 @@ import {
   REGISTER_SUCCESS,
   LOGIN_SUCCESS,
   LOGOUT,
-  SELECT_AUTHOR
+  SELECT_AUTHOR,
+  LOGIN_START
 } from "../actions/types";
 
 const INTIAL_STATE = {
-  isSignedIn: null,
+  isSignedIn: false,
   userId: null,
-  isAuthorSelected: null,
+  isAuthorSelected: false,
   authorId: null,
   error: null,
   message: null
@@ -18,11 +19,14 @@ export default (state = INTIAL_STATE, action) => {
   switch (action.type) {
     case REGISTER_SUCCESS:
       return { ...state, message: action.payload };
+    case LOGIN_START:
+      return { ...state, isSignedIn: null, isAuthorSelected: null };
     case LOGIN_SUCCESS:
       return {
         ...state,
         userId: action.payload._id,
-        isSignedIn: true
+        isSignedIn: true,
+        isAuthorSelected: false
       };
     case LOGOUT:
       return {
