@@ -8,7 +8,8 @@ import {
   FETCH_AUTHOR,
   EDIT_AUTHOR_SUCCESS,
   CLEAR_ERRORS,
-  DELETE_AUTHOR_SUCCESS
+  DELETE_AUTHOR_SUCCESS,
+  SELECT_AUTHOR
 } from "./types";
 import users from "../apis/users";
 import setAuthToken from "../helpers/setAuthToken";
@@ -90,6 +91,11 @@ export const deleteAuthor = authorId => async dispatch => {
   } catch (error) {
     dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
+};
+
+export const selectAuthor = authorId => dispatch => {
+  localStorage.setItem("authorId", authorId);
+  dispatch({ type: SELECT_AUTHOR, payload: authorId });
 };
 
 export const clearErrors = () => dispatch => {

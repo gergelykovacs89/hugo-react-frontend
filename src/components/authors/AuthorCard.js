@@ -11,21 +11,21 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import ResponsiveDialog from "../layouts/Dialog";
 import { connect } from "react-redux";
-import { deleteAuthor } from "../../actions";
+import { deleteAuthor, selectAuthor } from "../../actions";
 
 const styles = {
   card: {
     marginTop: "10vw",
     height: "23vw",
     width: "14vw",
-    minWidth: "125px",
-    minHeight: "240px"
+    minWidth: "146px",
+    minHeight: "250px"
   },
   media: {
     height: "14vw",
     width: "14vw",
-    minWidth: "125px",
-    minHeight: "125px"
+    minWidth: "146px",
+    minHeight: "146px"
   }
 };
 
@@ -34,11 +34,15 @@ class AuthorCard extends React.Component {
     this.props.deleteAuthor(authorId);
   };
 
+  onSelectAuthor = authorId => {
+    this.props.selectAuthor(authorId);
+  };
+
   render() {
     const { classes, author } = this.props;
     return (
       <Card className={classes.card}>
-        <CardActionArea>
+        <CardActionArea onClick={() => this.onSelectAuthor(author._id)}>
           <CardMedia
             className={classes.media}
             image={author.imgPath}
@@ -77,5 +81,5 @@ const AuthorCardWithStyles = withStyles(styles)(AuthorCard);
 
 export default connect(
   null,
-  { deleteAuthor }
+  { deleteAuthor, selectAuthor }
 )(AuthorCardWithStyles);
