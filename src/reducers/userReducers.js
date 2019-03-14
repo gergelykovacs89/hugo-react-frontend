@@ -4,7 +4,8 @@ import {
   LOGOUT,
   SELECT_AUTHOR,
   LOGIN_START,
-  ONSELECT_AUTHOR
+  ONSELECT_AUTHOR,
+  LOGIN_FAILED
 } from "../actions/types";
 
 const INTIAL_STATE = {
@@ -29,6 +30,8 @@ export default (state = INTIAL_STATE, action) => {
         isSignedIn: true,
         isAuthorSelected: false
       };
+    case LOGIN_FAILED:
+      return { ...state, isSignedIn: false, isAuthorSelected: false };
     case LOGOUT:
       return {
         ...state,

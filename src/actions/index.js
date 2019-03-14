@@ -11,7 +11,8 @@ import {
   DELETE_AUTHOR_SUCCESS,
   SELECT_AUTHOR,
   LOGIN_START,
-  ONSELECT_AUTHOR
+  ONSELECT_AUTHOR,
+  LOGIN_FAILED
 } from "./types";
 import users from "../apis/users";
 import setAuthToken from "../helpers/setAuthToken";
@@ -24,7 +25,7 @@ export const registerRequest = formValues => async dispatch => {
     dispatch({ type: REGISTER_SUCCESS, payload: response.data.message });
     history.push("/login");
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    handleFormErrors(error, dispatch);
   }
 };
 
@@ -50,7 +51,8 @@ export const loginRequest = formValues => async dispatch => {
       });
     }
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: LOGIN_FAILED });
+    handleFormErrors(error, dispatch);
   }
 };
 
@@ -67,7 +69,7 @@ export const addAuthor = formValues => async dispatch => {
     dispatch({ type: ADD_AUTHOR_SUCCESS, payload: response.data });
     history.push("/select-author");
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    handleFormErrors(error, dispatch);
   }
 };
 
@@ -80,7 +82,7 @@ export const editAuthor = (formValues, authorId) => async dispatch => {
     });
     history.push("/select-author");
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    handleFormErrors(error, dispatch);
   }
 };
 
@@ -90,7 +92,7 @@ export const fetchAuthor = authorId => async dispatch => {
     const response = await users.get(`/get-author/${authorId}`);
     dispatch({ type: FETCH_AUTHOR, payload: response.data.author });
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    handleFormErrors(error, dispatch);
   }
 };
 
@@ -99,7 +101,7 @@ export const deleteAuthor = authorId => async dispatch => {
     await users.delete(`/delete-author/${authorId}`);
     dispatch({ type: DELETE_AUTHOR_SUCCESS, payload: authorId });
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    handleFormErrors(error, dispatch);
   }
 };
 
@@ -127,4 +129,10 @@ const tokenLogin = async () => {
   setAuthToken(localStorage.getItem("jwtToken"));
   const response = await users.get("/user-authors");
   return response;
+};
+
+const handleFormErrors = (error, dispatch) => {
+  if (error.response !== undefined) {
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
 };
