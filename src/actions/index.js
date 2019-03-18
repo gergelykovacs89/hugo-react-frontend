@@ -12,7 +12,8 @@ import {
   SELECT_AUTHOR,
   LOGIN_START,
   ONSELECT_AUTHOR,
-  LOGIN_FAILED
+  LOGIN_FAILED,
+  GET_AUTHOR
 } from "./types";
 import users from "../apis/users";
 import authors from "../apis/authors";
@@ -92,6 +93,15 @@ export const fetchAuthor = authorId => async dispatch => {
     setAuthToken(localStorage.getItem("jwtToken"));
     const response = await authors.get(`/get-author/${authorId}`);
     dispatch({ type: FETCH_AUTHOR, payload: response.data.author });
+  } catch (error) {
+    handleFormErrors(error, dispatch);
+  }
+};
+
+export const getAuthor = authorId => async dispatch => {
+  try {
+    const response = await authors.get(`/get-author-detail/${authorId}`);
+    dispatch({ type: GET_AUTHOR, payload: response.data.author });
   } catch (error) {
     handleFormErrors(error, dispatch);
   }

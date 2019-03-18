@@ -5,7 +5,8 @@ import {
   SELECT_AUTHOR,
   LOGIN_START,
   ONSELECT_AUTHOR,
-  LOGIN_FAILED
+  LOGIN_FAILED,
+  GET_AUTHOR
 } from "../actions/types";
 
 const INTIAL_STATE = {
@@ -14,7 +15,8 @@ const INTIAL_STATE = {
   isAuthorSelected: false,
   authorId: null,
   error: null,
-  message: null
+  message: null,
+  authorDetail: null
 };
 
 export default (state = INTIAL_STATE, action) => {
@@ -44,6 +46,8 @@ export default (state = INTIAL_STATE, action) => {
       return { ...state, isAuthorSelected: true, authorId: action.payload };
     case ONSELECT_AUTHOR:
       return { ...state, isAuthorSelected: false, authorId: null };
+    case GET_AUTHOR:
+      return { ...state, authorDetail: action.payload };
     default:
       return state;
   }
