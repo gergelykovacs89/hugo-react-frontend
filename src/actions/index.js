@@ -15,6 +15,7 @@ import {
   LOGIN_FAILED
 } from "./types";
 import users from "../apis/users";
+import authors from "../apis/authors";
 import setAuthToken from "../helpers/setAuthToken";
 import history from "../history";
 import jwt_decode from "jwt-decode";
@@ -65,7 +66,7 @@ export const logout = () => dispatch => {
 
 export const addAuthor = formValues => async dispatch => {
   try {
-    const response = await users.post("/new-author", formValues);
+    const response = await authors.post("/new-author", formValues);
     dispatch({ type: ADD_AUTHOR_SUCCESS, payload: response.data });
     history.push("/select-author");
   } catch (error) {
@@ -75,7 +76,7 @@ export const addAuthor = formValues => async dispatch => {
 
 export const editAuthor = (formValues, authorId) => async dispatch => {
   try {
-    const response = await users.put(`/edit-author/${authorId}`, formValues);
+    const response = await authors.put(`/edit-author/${authorId}`, formValues);
     dispatch({
       type: EDIT_AUTHOR_SUCCESS,
       payload: response.data.authorUpdated
@@ -89,7 +90,7 @@ export const editAuthor = (formValues, authorId) => async dispatch => {
 export const fetchAuthor = authorId => async dispatch => {
   try {
     setAuthToken(localStorage.getItem("jwtToken"));
-    const response = await users.get(`/get-author/${authorId}`);
+    const response = await authors.get(`/get-author/${authorId}`);
     dispatch({ type: FETCH_AUTHOR, payload: response.data.author });
   } catch (error) {
     handleFormErrors(error, dispatch);
@@ -98,7 +99,7 @@ export const fetchAuthor = authorId => async dispatch => {
 
 export const deleteAuthor = authorId => async dispatch => {
   try {
-    await users.delete(`/delete-author/${authorId}`);
+    await authors.delete(`/delete-author/${authorId}`);
     dispatch({ type: DELETE_AUTHOR_SUCCESS, payload: authorId });
   } catch (error) {
     handleFormErrors(error, dispatch);
@@ -127,7 +128,7 @@ const credentialsLogin = async formValues => {
 };
 const tokenLogin = async () => {
   setAuthToken(localStorage.getItem("jwtToken"));
-  const response = await users.get("/user-authors");
+  const response = await authors.get("/user-authors");
   return response;
 };
 
