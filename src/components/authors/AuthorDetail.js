@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
-import { getAuthor } from "../../actions";
+import { getAuthor, followAuthor, unFollowAuthor } from "../../actions";
 import {
   Paper,
   Typography,
@@ -46,7 +46,7 @@ const styles = theme => ({
     }
   },
   authorDescription: {
-    fontSize:"1vw"
+    fontSize: "1vw"
   },
   followButton: {
     marginTop: "1vw",
@@ -73,17 +73,79 @@ class AuthorDetail extends React.Component {
     }
   }
 
+  onFollow = () => {
+    this.props.followAuthor(
+      this.props.selectedAuthor._id,
+      this.props.author._id
+    );
+  };
+
+  onUnFollow = () => {
+    this.props.unFollowAuthor(
+      this.props.selectedAuthor._id,
+      this.props.author._id
+    );
+  };
+
   circularProgress = (
     <Fragment>
       <CircularProgress color="inherit" />
     </Fragment>
   );
 
+  renderButtons(classes, selectedAuthor, isSelf) {
+    if (isSelf) {
+      return (
+        <Fragment>
+          <Button
+            variant="outlined"
+            size="small"
+            disabled={true}
+            className={classes.followButton}
+          >
+            It's a you!
+          </Button>
+        </Fragment>
+      );
+    } else {
+      const connection = selectedAuthor.following.indexOf(
+        this.props.author._id
+      );
+      if (!connection) {
+        return (
+          <Fragment>
+            <Button
+              variant="outlined"
+              size="small"
+              className={classes.followButton}
+              onClick={this.onUnFollow}
+            >
+              Unfollow
+            </Button>
+          </Fragment>
+        );
+      } else {
+        return (
+          <Fragment>
+            <Button
+              variant="contained"
+              size="small"
+              className={classes.followButton}
+              onClick={this.onFollow}
+            >
+              Follow
+            </Button>
+          </Fragment>
+        );
+      }
+    }
+  }
+
   render() {
-    if (!this.props.author) {
+    if (!this.props.author || !this.props.selectedAuthor) {
       return this.circularProgress;
     }
-    const { author, classes } = this.props;
+    const { author, selectedAuthor, classes, isSelf } = this.props;
     return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
@@ -104,14 +166,7 @@ class AuthorDetail extends React.Component {
               <Typography variant="h1" className={classes.authorName}>
                 {author.name}
               </Typography>
-              <span>
-                <Button variant="contained" size="small" className={classes.followButton}>
-                  Follow
-                </Button>
-                <Button variant="outlined" size="small" className={classes.followButton}>
-                  Unfollow
-                </Button>
-              </span>
+              <span>{this.renderButtons(classes, selectedAuthor, isSelf)}</span>
               <Typography variant="subtitle1" className={classes.authorData}>
                 {"0"} stories {author.followers.length} followers{" "}
                 {author.following.length} following
@@ -132,9 +187,11 @@ class AuthorDetail extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    author: state.user.authorDetail
+    author: state.user.authorDetail,
+    selectedAuthor: state.authors[state.user.authorId],
+    isSelf: state.authors[ownProps.match.params.id] ? true : false
   };
 };
 
@@ -142,5 +199,5 @@ const AuthorDetailWithStyles = withStyles(styles)(AuthorDetail);
 
 export default connect(
   mapStateToProps,
-  { getAuthor }
+  { getAuthor, followAuthor, unFollowAuthor }
 )(AuthorDetailWithStyles);

@@ -4,7 +4,8 @@ import {
   FETCH_AUTHOR,
   EDIT_AUTHOR_SUCCESS,
   DELETE_AUTHOR_SUCCESS,
-  LOGOUT
+  LOGOUT,
+  FOLLOW_SUCCESS
 } from "../actions/types";
 import _ from "lodash";
 
@@ -24,6 +25,17 @@ export default (state = INTIAL_STATE, action) => {
       return _.omit(state, action.payload);
     case LOGOUT:
       return {};
+    case FOLLOW_SUCCESS:
+      return {
+        ...state,
+        [action.payload.selectAuthorId]: {
+          ...state[action.payload.selectAuthorId],
+          following: [
+            ...state[action.payload.selectAuthorId].following,
+            action.payload.authorToFollowId
+          ]
+        }
+      };
     default:
       return state;
   }

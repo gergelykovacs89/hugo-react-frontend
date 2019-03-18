@@ -13,7 +13,9 @@ import {
   LOGIN_START,
   ONSELECT_AUTHOR,
   LOGIN_FAILED,
-  GET_AUTHOR
+  GET_AUTHOR,
+  FOLLOW_SUCCESS,
+  UN_FOLLOW_SUCCESS
 } from "./types";
 import users from "../apis/users";
 import authors from "../apis/authors";
@@ -111,6 +113,46 @@ export const deleteAuthor = authorId => async dispatch => {
   try {
     await authors.delete(`/delete-author/${authorId}`);
     dispatch({ type: DELETE_AUTHOR_SUCCESS, payload: authorId });
+  } catch (error) {
+    handleFormErrors(error, dispatch);
+  }
+};
+
+export const followAuthor = (
+  selectAuthorId,
+  authorToFollowId
+) => async dispatch => {
+  try {
+    const response = await authors.post(`/follow-author`, {
+      selectAuthorId,
+      authorToFollowId
+    });
+    if (response.data.message === "UPDATED") {
+      dispatch({
+        type: FOLLOW_SUCCESS,
+        payload: { selectAuthorId, authorToFollowId }
+      });
+    }
+  } catch (error) {
+    handleFormErrors(error, dispatch);
+  }
+};
+
+export const unFollowAuthor = (selectAuthorId, authorToUnFollowId) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    const response = await authors.post(`/unfollow-author`, {
+      selectAuthorId,
+      authorToUnFollowId
+    });
+    if (response.data.message === "UPDATED") {
+      dispatch({
+        type: UN_FOLLOW_SUCCESS,
+        payload: { selectAuthorId, authorToUnFollowId }
+      });
+    }
   } catch (error) {
     handleFormErrors(error, dispatch);
   }
