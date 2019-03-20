@@ -86,6 +86,21 @@ class Header extends React.Component {
                   <HeaderAvatar author={author} />
                 ) : null}
               </Grid>
+              <Grid item className={classes.createStory}>
+                {isAuthorSelected === null ? (
+                  circularProgress
+                ) : isAuthorSelected ? (
+                  <Button component={RouterLink} to="/s/create" >
+                    <Typography
+                      variant="subtitle1"
+                      color="default"
+                      style={{ fontSize: "2.5vh", textTransform: "none" }}
+                    >
+                      + story
+                    </Typography>
+                  </Button>
+                ) : null}
+              </Grid>
               <Grid item>
                 {isSignedIn === null ? (
                   circularProgress
