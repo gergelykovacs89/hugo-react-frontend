@@ -5,7 +5,8 @@ import {
   EDIT_AUTHOR_SUCCESS,
   DELETE_AUTHOR_SUCCESS,
   LOGOUT,
-  FOLLOW_SUCCESS
+  FOLLOW_SUCCESS,
+  UN_FOLLOW_SUCCESS
 } from "../actions/types";
 import _ from "lodash";
 
@@ -34,6 +35,16 @@ export default (state = INTIAL_STATE, action) => {
             ...state[action.payload.selectAuthorId].following,
             action.payload.authorToFollowId
           ]
+        }
+      };
+    case UN_FOLLOW_SUCCESS:
+      return {
+        ...state,
+        [action.payload.selectAuthorId]: {
+          ...state[action.payload.selectAuthorId],
+          following: state[action.payload.selectAuthorId].following.filter(
+            authorId => authorId !== action.payload.authorToUnFollowId
+          )
         }
       };
     default:

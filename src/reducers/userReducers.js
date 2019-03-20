@@ -7,7 +7,8 @@ import {
   ONSELECT_AUTHOR,
   LOGIN_FAILED,
   GET_AUTHOR,
-  FOLLOW_SUCCESS
+  FOLLOW_SUCCESS,
+  UN_FOLLOW_SUCCESS
 } from "../actions/types";
 
 const INTIAL_STATE = {
@@ -58,6 +59,16 @@ export default (state = INTIAL_STATE, action) => {
             ...state.authorDetail.followers,
             action.payload.selectAuthorId
           ]
+        }
+      };
+    case UN_FOLLOW_SUCCESS:
+      return {
+        ...state,
+        authorDetail: {
+          ...state.authorDetail,
+          followers: state.authorDetail.followers.filter(
+            authorId => authorId !== action.payload.selectAuthorId
+          )
         }
       };
     default:
