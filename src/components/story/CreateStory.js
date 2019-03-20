@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import { clearErrors } from "../../actions";
+import { createStory } from "../../actions/story";
 import StoryForm from "./StoryForm";
 import { createEditorStateWithText } from "draft-js-plugins-editor";
 import { convertToRaw } from "draft-js";
@@ -20,7 +21,7 @@ class CreateStory extends React.Component {
   onSubmit = formValues => {
     let contentState = this.state.editorState.getCurrentContent();
     formValues.text = JSON.stringify(convertToRaw(contentState));
-    console.log(formValues);
+    this.props.createStory(formValues);
   };
 
   render() {
@@ -47,5 +48,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { clearErrors }
+  { clearErrors, createStory }
 )(CreateStory);
