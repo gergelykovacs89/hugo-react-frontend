@@ -7,6 +7,7 @@
   border-radius: 2px;
   box-shadow: inset 0px 1px 8px -3px #ababab;
   background: #fefefe;
+  font-family: Roboto;
 }
 
 .editor :global(.public-DraftEditor-content) {
