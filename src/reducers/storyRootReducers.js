@@ -1,7 +1,6 @@
 import {
   SET_STORY_ROOTS,
   CREATE_STORY_ROOT_SUCCESS,
-  FETCH_STORY_ROOT,
   EDIT_STORY_ROOT_SUCCESS,
   DELETE_STORY_ROOT_SUCCESS,
   LOGOUT,
@@ -16,8 +15,6 @@ export default (state = INTIAL_STATE, action) => {
     case SET_STORY_ROOTS:
       return { ...state, ..._.mapKeys(action.payload, "_id") };
     case CREATE_STORY_ROOT_SUCCESS:
-      return { ...state, [action.payload._id]: action.payload };
-    case FETCH_STORY_ROOT:
       return { ...state, [action.payload._id]: action.payload };
     case EDIT_STORY_ROOT_SUCCESS:
       return { ...state, [action.payload._id]: action.payload };
