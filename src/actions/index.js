@@ -51,7 +51,7 @@ export const loginRequest = formValues => async dispatch => {
     dispatch({ type: LOGIN_SUCCESS, payload: decoded });
     dispatch({ type: SET_AUTHORS, payload: response.data.authors });
     if (localStorage.getItem("authorId")) {
-      dispatch(selectAuthor(localStorage.getItem("authorId")));
+      dispatch(selectAuthor(localStorage.getItem("authorId"), false));
     }
   } catch (error) {
     dispatch({ type: LOGIN_FAILED });
@@ -161,11 +161,13 @@ export const unFollowAuthor = (selectAuthorId, authorToUnFollowId) => async (
   }
 };
 
-export const selectAuthor = authorId => dispatch => {
+export const selectAuthor = (authorId, redirect) => dispatch => {
   localStorage.setItem("authorId", authorId);
   dispatch(getStoryRootsByAuthorId(authorId));
   dispatch({ type: SELECT_AUTHOR, payload: authorId });
-  history.push(`/a/${authorId}`);
+  if (redirect) {
+    history.push(`/a/${authorId}`);
+  }
 };
 
 export const onSelectAuthor = () => dispatch => {

@@ -35,7 +35,7 @@ class AuthorCard extends React.Component {
   };
 
   onSelectAuthor = authorId => {
-    this.props.selectAuthor(authorId);
+    this.props.selectAuthor(authorId, true);
   };
 
   render() {

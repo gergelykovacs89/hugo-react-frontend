@@ -9,7 +9,9 @@ import {
   GET_AUTHOR,
   FOLLOW_SUCCESS,
   UN_FOLLOW_SUCCESS,
-  UN_SET_AUTHOR
+  UN_SET_AUTHOR,
+  UN_SET_STORY_ROOT,
+  FETCH_STORY_ROOT
 } from "../actions/types";
 
 const INTIAL_STATE = {
@@ -19,7 +21,8 @@ const INTIAL_STATE = {
   authorId: null,
   error: null,
   message: null,
-  authorDetail: null
+  authorDetail: null,
+  storyRootDetail: null
 };
 
 export default (state = INTIAL_STATE, action) => {
@@ -51,8 +54,12 @@ export default (state = INTIAL_STATE, action) => {
       return { ...state, isAuthorSelected: false, authorId: null };
     case GET_AUTHOR:
       return { ...state, authorDetail: action.payload };
+    case FETCH_STORY_ROOT:
+      return { ...state, storyRootDetail: action.payload };
     case UN_SET_AUTHOR:
       return { ...state, authorDetail: null };
+    case UN_SET_STORY_ROOT:
+      return { ...state, storyRootDetail: null };
     case FOLLOW_SUCCESS:
       return {
         ...state,
