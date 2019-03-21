@@ -1,6 +1,5 @@
 import React from "react";
 import { Field, reduxForm } from "redux-form";
-import PropTypes from "prop-types";
 import { Link as RouterLink } from "react-router-dom";
 import { Paper, Typography, Button, TextField } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -159,10 +158,6 @@ class StoryForm extends React.Component {
     );
   }
 }
-
-StoryForm.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default reduxForm({
   form: "storyForm",

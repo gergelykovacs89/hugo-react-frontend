@@ -19,6 +19,7 @@ class CreateStory extends React.Component {
   }
 
   onSubmit = formValues => {
+    this.props.clearErrors();
     let contentState = this.state.editorState.getCurrentContent();
     formValues.text = JSON.stringify(convertToRaw(contentState));
     this.props.createStory(formValues);
