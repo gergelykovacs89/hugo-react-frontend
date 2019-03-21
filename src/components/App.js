@@ -10,10 +10,11 @@ import { connect } from "react-redux";
 import EditAuthor from "./authors/EditAuthor";
 import AuthorDetail from "./authors/AuthorDetail";
 import CreateStory from "./story/CreateStory";
-import Immutable from 'immutable'
+import StoryWriter from "./story/StoryWriter";
+import Immutable from "immutable";
 
 // See more: https://github.com/facebook/draft-js/issues/950
-Immutable.Iterable.noLengthWarning = true
+Immutable.Iterable.noLengthWarning = true;
 
 class App extends React.Component {
   componentDidMount() {
@@ -34,6 +35,7 @@ class App extends React.Component {
               <Route path="/edit-author/:id" exact component={EditAuthor} />
               <Route path="/a/:id" exact component={AuthorDetail} />
               <Route path="/s/create" exact component={CreateStory} />
+              <Route path="/sw/:id" exact component={StoryWriter} />
               <Route path="/register" exact component={Register} />
               <Route path="/login" exact component={Login} />
             </Switch>
