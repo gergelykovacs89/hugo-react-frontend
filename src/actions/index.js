@@ -23,6 +23,7 @@ import authors from "../apis/authors";
 import setAuthToken from "../helpers/setAuthToken";
 import history from "../history";
 import jwt_decode from "jwt-decode";
+import { getStoryRootsByAuthorId } from "../actions/story";
 
 export const registerRequest = formValues => async dispatch => {
   try {
@@ -50,10 +51,7 @@ export const loginRequest = formValues => async dispatch => {
     dispatch({ type: LOGIN_SUCCESS, payload: decoded });
     dispatch({ type: SET_AUTHORS, payload: response.data.authors });
     if (localStorage.getItem("authorId")) {
-      dispatch({
-        type: SELECT_AUTHOR,
-        payload: localStorage.getItem("authorId")
-      });
+      dispatch(selectAuthor(localStorage.getItem("authorId")));
     }
   } catch (error) {
     dispatch({ type: LOGIN_FAILED });
@@ -165,6 +163,7 @@ export const unFollowAuthor = (selectAuthorId, authorToUnFollowId) => async (
 
 export const selectAuthor = authorId => dispatch => {
   localStorage.setItem("authorId", authorId);
+  dispatch(getStoryRootsByAuthorId(authorId));
   dispatch({ type: SELECT_AUTHOR, payload: authorId });
   history.push(`/a/${authorId}`);
 };
