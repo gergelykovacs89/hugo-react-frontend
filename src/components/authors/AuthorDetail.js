@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
-import { getAuthor, followAuthor, unFollowAuthor } from "../../actions";
+import { getAuthor, followAuthor, unFollowAuthor, unSetAuthor } from "../../actions";
 import {
   Paper,
   Typography,
@@ -71,6 +71,10 @@ class AuthorDetail extends React.Component {
     if (nextProps.match.params.id !== this.props.match.params.id) {
       this.props.getAuthor(nextProps.match.params.id);
     }
+  }
+
+  componentWillUnmount() {
+    this.props.unSetAuthor();
   }
 
   onFollow = () => {
@@ -199,5 +203,5 @@ const AuthorDetailWithStyles = withStyles(styles)(AuthorDetail);
 
 export default connect(
   mapStateToProps,
-  { getAuthor, followAuthor, unFollowAuthor }
+  { getAuthor, followAuthor, unFollowAuthor, unSetAuthor }
 )(AuthorDetailWithStyles);

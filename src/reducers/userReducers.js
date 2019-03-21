@@ -8,7 +8,8 @@ import {
   LOGIN_FAILED,
   GET_AUTHOR,
   FOLLOW_SUCCESS,
-  UN_FOLLOW_SUCCESS
+  UN_FOLLOW_SUCCESS,
+  UN_SET_AUTHOR
 } from "../actions/types";
 
 const INTIAL_STATE = {
@@ -50,6 +51,8 @@ export default (state = INTIAL_STATE, action) => {
       return { ...state, isAuthorSelected: false, authorId: null };
     case GET_AUTHOR:
       return { ...state, authorDetail: action.payload };
+    case UN_SET_AUTHOR:
+      return { ...state, authorDetail: null };
     case FOLLOW_SUCCESS:
       return {
         ...state,

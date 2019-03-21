@@ -15,7 +15,8 @@ import {
   LOGIN_FAILED,
   GET_AUTHOR,
   FOLLOW_SUCCESS,
-  UN_FOLLOW_SUCCESS
+  UN_FOLLOW_SUCCESS,
+  UN_SET_AUTHOR
 } from "./types";
 import users from "../apis/users";
 import authors from "../apis/authors";
@@ -107,6 +108,10 @@ export const getAuthor = authorId => async dispatch => {
   } catch (error) {
     handleFormErrors(error, dispatch);
   }
+};
+
+export const unSetAuthor = () => dispatch => {
+  dispatch({ type: UN_SET_AUTHOR });
 };
 
 export const deleteAuthor = authorId => async dispatch => {
