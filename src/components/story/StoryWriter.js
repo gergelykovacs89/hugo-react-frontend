@@ -1,14 +1,23 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
+import { createEditorStateWithText } from "draft-js-plugins-editor";
+import { Editor, EditorState, convertFromRaw } from "draft-js";
 import { getStoryRoot, unSetStoryRoot } from "../../actions/story";
+import { unSetAuthor } from "../../actions";
+import HeaderAvatar from "../layouts/HeaderAvatar";
 import {
   Paper,
   CircularProgress,
   withStyles,
   Grid,
-  Avatar,
   Typography
 } from "@material-ui/core";
+import {
+  RemoveRedEye,
+  ThumbUpOutlined,
+  ShareOutlined
+} from "@material-ui/icons";
+import CustomTextEditor from "../text/CustomTextEditor";
 
 const styles = theme => ({
   root: {
@@ -20,34 +29,37 @@ const styles = theme => ({
     [theme.breakpoints.up("sm")]: {
       marginTop: "1vw",
       margin: "auto",
-      width: "70vw"
+      width: "80vw"
     }
   },
   avatar: {
-    marginLeft: "1vw",
-    [theme.breakpoints.up("md")]: {
-      marginLeft: "2vw"
-    },
-    marginTop: "2vh",
-    marginBottom: "2vh",
     minHeight: "100px",
     minWidth: "100px",
-    height: "13vw",
-    width: "13vw"
+    height: "100%",
+    width: "100%"
   },
   title: {
-    marginTop: "4vh",
-    fontSize: "23px",
+    textAlign: "justify",
+    fontFamily: "Oswald",
+    wordBreak: "break-word",
+    lineHeight: "1.25",
+    letterSpacing: "0",
+    fontSize: "30px",
     [theme.breakpoints.up("sm")]: {
-      fontSize: "4vw"
-    },
-    [theme.breakpoints.down("xs")]: {
-      marginLeft: "10vw"
+      fontSize: "45px"
     }
   }
 });
 
 class StoryWriter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { editorState: EditorState.createEmpty() };
+  }
+  handleEditorChange = editorState => {
+    this.setState({ editorState });
+  };
+
   componentDidMount() {
     this.props.getStoryRoot(this.props.match.params.id);
   }
@@ -60,6 +72,7 @@ class StoryWriter extends React.Component {
 
   componentWillUnmount() {
     this.props.unSetStoryRoot();
+    this.props.unSetAuthor();
   }
 
   onFollow = () => {
@@ -79,30 +92,74 @@ class StoryWriter extends React.Component {
   renderButtons() {}
 
   render() {
-    if (!this.props.storyRoot) {
+    if (!this.props.storyRoot || !this.props.author) {
       return this.circularProgress;
     }
-    const { storyRoot, classes } = this.props;
+    const { storyRoot, classes, author } = this.props;
+    const contentState = convertFromRaw(JSON.parse(storyRoot.text.text));
+    const editorState = EditorState.createWithContent(contentState);
     return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
-          <Grid
-            justify="space-between"
-            container
-            spacing={24}
-            alignItems="flex-start"
-          >
-            <Grid item xs={9}>
+          <Grid justify="center" container spacing={24} alignItems="center">
+            <Grid item xs={12} md={6}>
               <Typography variant="h2" className={classes.title}>
                 {storyRoot.title}
               </Typography>
             </Grid>
-            <Grid item xs={3}>
-              <Avatar
+            <Grid item xs={8} md={6}>
+              <img
                 src={storyRoot.imgPath}
                 alt={storyRoot.title}
                 className={classes.avatar}
               />
+            </Grid>
+          </Grid>
+        </Paper>
+        <Paper className={classes.paper}>
+          <Grid justify="center" container spacing={24} alignItems="center">
+            <Grid item xs={12} md={6}>
+              <Typography variant="subtitle2">
+                by: <HeaderAvatar author={author} />
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Grid
+                justify="space-between"
+                container
+                spacing={24}
+                alignItems="center"
+              >
+                <Grid item>
+                  <Typography variant="subtitle2">
+                    <RemoveRedEye /> 0 watched
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle2">
+                    <ThumbUpOutlined /> 0 votes
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle2">
+                    <ShareOutlined /> 0 forks
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Paper>
+        <Paper className={classes.paper}>
+          <Grid justify="center" container spacing={24} alignItems="center">
+            <Grid item xs={12} md={8}>
+              <Editor editorState={editorState} readOnly={true} />
+            </Grid>
+          </Grid>
+        </Paper>
+        <Paper className={classes.paper}>
+          <Grid justify="center" container spacing={24} alignItems="center">
+            <Grid item xs={12} md={8}>
+              <CustomTextEditor editorState={editorState} readOnly={true} />
             </Grid>
           </Grid>
         </Paper>
@@ -113,7 +170,8 @@ class StoryWriter extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    storyRoot: state.user.storyRootDetail
+    storyRoot: state.user.storyRootDetail,
+    author: state.user.authorDetail
   };
 };
 
@@ -121,5 +179,5 @@ const StoryWriterWithStyles = withStyles(styles)(StoryWriter);
 
 export default connect(
   mapStateToProps,
-  { getStoryRoot, unSetStoryRoot }
+  { getStoryRoot, unSetStoryRoot, unSetAuthor }
 )(StoryWriterWithStyles);

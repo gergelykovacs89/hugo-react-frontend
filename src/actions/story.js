@@ -3,7 +3,8 @@ import {
   SET_STORY_ROOTS,
   CREATE_STORY_ROOT_SUCCESS,
   FETCH_STORY_ROOT,
-  UN_SET_STORY_ROOT
+  UN_SET_STORY_ROOT,
+  GET_AUTHOR
 } from "./types";
 import history from "../history";
 import story from "../apis/story";
@@ -33,7 +34,10 @@ export const getStoryRoot = storyRootId => async dispatch => {
   try {
     setAuthToken(localStorage.getItem("jwtToken"));
     const response = await story.get(`/root/${storyRootId}`);
-    dispatch({ type: FETCH_STORY_ROOT, payload: response.data });
+    response.data.root.text = response.data.rootText;
+
+    dispatch({ type: FETCH_STORY_ROOT, payload: response.data.root });
+    dispatch({ type: GET_AUTHOR, payload: response.data.author });
   } catch (error) {
     console.log(error);
   }
