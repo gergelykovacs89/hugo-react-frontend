@@ -55,7 +55,7 @@ export default (state = INTIAL_STATE, action) => {
     case GET_AUTHOR:
       return { ...state, authorDetail: action.payload };
     case FETCH_STORY_ROOT:
-      return { ...state, storyRootDetail: action.payload };
+      return { ...state, storyRootDetail: action.payload.root, authorDetail: action.payload.author };
     case UN_SET_AUTHOR:
       return { ...state, authorDetail: null };
     case UN_SET_STORY_ROOT:
