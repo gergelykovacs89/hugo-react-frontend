@@ -1,7 +1,5 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
-import { createEditorStateWithText } from "draft-js-plugins-editor";
-import { Editor, EditorState, convertFromRaw } from "draft-js";
 import { getStoryRoot, unSetStoryRoot } from "../../actions/story";
 import { unSetAuthor } from "../../actions";
 import HeaderAvatar from "../layouts/HeaderAvatar";
@@ -17,7 +15,7 @@ import {
   ThumbUpOutlined,
   ShareOutlined
 } from "@material-ui/icons";
-import CustomTextEditor from "../text/CustomTextEditor";
+import TextShow from "../text/TextShow";
 
 const styles = theme => ({
   root: {
@@ -52,14 +50,6 @@ const styles = theme => ({
 });
 
 class StoryWriter extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { editorState: EditorState.createEmpty() };
-  }
-  handleEditorChange = editorState => {
-    this.setState({ editorState });
-  };
-
   componentDidMount() {
     this.props.getStoryRoot(this.props.match.params.id);
   }
@@ -89,15 +79,12 @@ class StoryWriter extends React.Component {
     </Fragment>
   );
 
-  renderButtons() {}
 
   render() {
     if (!this.props.storyRoot || !this.props.author) {
       return this.circularProgress;
     }
     const { storyRoot, classes, author } = this.props;
-    const contentState = convertFromRaw(JSON.parse(storyRoot.text.text));
-    const editorState = EditorState.createWithContent(contentState);
     return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
@@ -149,20 +136,7 @@ class StoryWriter extends React.Component {
             </Grid>
           </Grid>
         </Paper>
-        <Paper className={classes.paper}>
-          <Grid justify="center" container spacing={24} alignItems="center">
-            <Grid item xs={12} md={8}>
-              <Editor editorState={editorState} readOnly={true} />
-            </Grid>
-          </Grid>
-        </Paper>
-        <Paper className={classes.paper}>
-          <Grid justify="center" container spacing={24} alignItems="center">
-            <Grid item xs={12} md={8}>
-              <CustomTextEditor editorState={editorState} readOnly={true} />
-            </Grid>
-          </Grid>
-        </Paper>
+        <TextShow textId={storyRoot._rootTextId}/>
       </div>
     );
   }
