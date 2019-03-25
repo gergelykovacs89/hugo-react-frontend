@@ -1,7 +1,6 @@
 import React, { Fragment } from "react";
 import Editor from "draft-js-plugins-editor";
-
-import createToolbarPlugin, { Separator } from "draft-js-static-toolbar-plugin";
+import createInlineToolbarPlugin,  { Separator }  from 'draft-js-inline-toolbar-plugin';
 import {
   ItalicButton,
   BoldButton,
@@ -13,20 +12,22 @@ import {
   UnorderedListButton,
   OrderedListButton,
   BlockquoteButton,
-  CodeBlockButton
+  CodeBlockButton,
 } from "draft-js-buttons";
-import "./editorStyles.css";
-import "draft-js-static-toolbar-plugin/lib/plugin.css";
+import editorStyles from "./editorStyles.module.css";
+import 'draft-js-inline-toolbar-plugin/lib/plugin.css';
+
+const inlineToolbarPlugin = createInlineToolbarPlugin();
+const { InlineToolbar } = inlineToolbarPlugin;
+const plugins = [inlineToolbarPlugin];
 
 class HeadlinesPicker extends React.Component {
   componentDidMount() {
-    setTimeout(() => {
-      window.addEventListener("click", this.onWindowClick);
-    });
+    setTimeout(() => { window.addEventListener('click', this.onWindowClick); });
   }
 
   componentWillUnmount() {
-    window.removeEventListener("click", this.onWindowClick);
+    window.removeEventListener('click', this.onWindowClick);
   }
 
   onWindowClick = () =>
@@ -38,18 +39,20 @@ class HeadlinesPicker extends React.Component {
     const buttons = [HeadlineOneButton, HeadlineTwoButton, HeadlineThreeButton];
     return (
       <div>
-        {buttons.map((
-          Button,
-          i // eslint-disable-next-line
-        ) => (
+        {buttons.map((Button, i) => // eslint-disable-next-line
           <Button key={i} {...this.props} />
-        ))}
+        )}
       </div>
     );
   }
 }
 
 class HeadlinesButton extends React.Component {
+  // When using a click event inside overridden content, mouse down
+  // events needs to be prevented so the focus stays in the editor
+  // and the toolbar remains visible  onMouseDown = (event) => event.preventDefault()
+  onMouseDown = (event) => event.preventDefault()
+
   onClick = () =>
     // A button can call `onOverrideContent` to replace the content
     // of the toolbar. This can be useful for displaying sub
@@ -58,18 +61,14 @@ class HeadlinesButton extends React.Component {
 
   render() {
     return (
-      <div className="headlineButtonWrapper">
-        <button onClick={this.onClick} className="headlineButton">
+      <div onMouseDown={this.onMouseDown} className={editorStyles.headlineButtonWrapper}>
+        <button onClick={this.onClick} className={editorStyles.headlineButton}>
           H
         </button>
       </div>
     );
   }
 }
-
-const toolbarPlugin = createToolbarPlugin();
-const { Toolbar } = toolbarPlugin;
-const plugins = [toolbarPlugin];
 
 export default class CustomTextEditor extends React.Component {
   focus = () => {
@@ -80,7 +79,7 @@ export default class CustomTextEditor extends React.Component {
     const { editorState, onEditorChange } = this.props;
     return (
       <Fragment>
-        <div className="editor" onClick={this.focus}>
+        <div className={editorStyles.editor} onClick={this.focus}>
           <Editor
             editorState={editorState}
             onChange={onEditorChange}
@@ -89,7 +88,7 @@ export default class CustomTextEditor extends React.Component {
               this.editor = element;
             }}
           />
-          <Toolbar>
+          <InlineToolbar>
             {// may be use React.Fragment instead of div to improve perfomance after React 16
             externalProps => (
               <Fragment>
@@ -105,7 +104,7 @@ export default class CustomTextEditor extends React.Component {
                 <CodeBlockButton {...externalProps} />
               </Fragment>
             )}
-          </Toolbar>
+          </InlineToolbar>
         </div>
       </Fragment>
     );
