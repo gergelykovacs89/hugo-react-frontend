@@ -12,6 +12,7 @@ import AuthorDetail from "./authors/AuthorDetail";
 import CreateStory from "./story/CreateStory";
 import StoryWriter from "./story/StoryWriter";
 import Immutable from "immutable";
+import EditStory from "./story/EditStory";
 
 // See more: https://github.com/facebook/draft-js/issues/950
 Immutable.Iterable.noLengthWarning = true;
@@ -35,6 +36,7 @@ class App extends React.Component {
               <Route path="/edit-author/:id" exact component={EditAuthor} />
               <Route path="/a/:id" exact component={AuthorDetail} />
               <Route path="/s/create" exact component={CreateStory} />
+              <Route path="/s/update/:id" exact component={EditStory} />
               <Route path="/sw/:id" exact component={StoryWriter} />
               <Route path="/register" exact component={Register} />
               <Route path="/login" exact component={Login} />

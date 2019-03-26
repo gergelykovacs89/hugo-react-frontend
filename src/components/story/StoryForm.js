@@ -1,9 +1,9 @@
 import React from "react";
 import { Field, reduxForm } from "redux-form";
-import { Link as RouterLink } from "react-router-dom";
 import { Paper, Typography, Button, TextField } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
 import CustomTextEditor from "../text/CustomTextEditor";
+import history from "../../history";
 
 const styles = theme => ({
   main: {
@@ -143,8 +143,7 @@ class StoryForm extends React.Component {
             </Button>
           </form>
           <Button
-            component={RouterLink}
-            to="/select-author"
+            onClick={history.goBack}
             type="button"
             fullWidth
             variant="contained"

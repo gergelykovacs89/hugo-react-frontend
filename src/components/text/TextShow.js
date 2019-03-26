@@ -64,6 +64,26 @@ class TextShow extends React.Component {
     this.props.updateText(contentState, this.props.textId);
   };
 
+  renderEditButton = text => {
+    if (this.props.selfAuthorId === text._authorId) {
+      return (
+        <Fragment>
+          <Button
+            variant="contained"
+            onClick={() =>
+              this.setState({
+                editMode: !this.state.editMode,
+                editorState: this.state.readerState
+              })
+            }
+          >
+            <Edit />
+          </Button>
+        </Fragment>
+      );
+    }
+  };
+
   circularProgress = (
     <Fragment>
       <CircularProgress color="inherit" />
@@ -75,17 +95,7 @@ class TextShow extends React.Component {
       <Paper className={classes.paper}>
         <Grid justify="flex-start" container spacing={24} alignItems="center">
           <Grid item xs={12} md={2}>
-            <Button
-              variant="contained"
-              onClick={() =>
-                this.setState({
-                  editMode: !this.state.editMode,
-                  editorState: this.state.readerState
-                })
-              }
-            >
-              <Edit />
-            </Button>
+            {this.renderEditButton(this.props.text)}
           </Grid>
           <Grid item xs={12} md={8}>
             <Editor
@@ -151,7 +161,8 @@ const textShowWithStyles = withStyles(styles)(TextShow);
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    text: state.user.texts[ownProps.textId]
+    text: state.user.texts[ownProps.textId],
+    selfAuthorId: state.user.authorId
   };
 };
 

@@ -1,10 +1,12 @@
 import text from "../apis/text";
 import { ADD_TEXT, LOAD_TEXT, EDIT_TEXT } from "./types";
+import setAuthToken from "../helpers/setAuthToken";
 
 export const fetchText = textId => async (dispatch, getState) => {
   try {
+    setAuthToken(localStorage.getItem("jwtToken"));
     const response = await text.get(`/${textId}`);
-    if (response.data._authorId === getState().user.authorId) {
+    if (response.data._authorId === localStorage.getItem("authorId")) {
       dispatch({ type: ADD_TEXT, payload: response.data });
       dispatch({ type: LOAD_TEXT, payload: response.data });
     } else {

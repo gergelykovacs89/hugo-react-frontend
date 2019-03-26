@@ -8,13 +8,15 @@ import {
   CircularProgress,
   withStyles,
   Grid,
-  Typography
+  Typography,
+  Button
 } from "@material-ui/core";
 import {
   RemoveRedEye,
   ThumbUpOutlined,
   ShareOutlined
 } from "@material-ui/icons";
+import { Link as RouterLink } from "react-router-dom";
 import TextShow from "../text/TextShow";
 
 const styles = theme => ({
@@ -79,6 +81,25 @@ class StoryWriter extends React.Component {
     </Fragment>
   );
 
+  renderEditButton = (author, storyRoot) => {
+    if (this.props.selfAuthorId === author._id) {
+      return (
+        <Fragment>
+          <Button
+            component={RouterLink}
+            to={{
+              pathname: `/s/update/${storyRoot._id}`,
+              state: { rootTextId: storyRoot._rootTextId }
+            }}
+            color="default"
+            variant="contained"
+          >
+            edit root
+          </Button>
+        </Fragment>
+      );
+    }
+  };
 
   render() {
     if (!this.props.storyRoot || !this.props.author) {
@@ -106,9 +127,21 @@ class StoryWriter extends React.Component {
         <Paper className={classes.paper}>
           <Grid justify="center" container spacing={24} alignItems="center">
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2">
-                by: <HeaderAvatar author={author} />
-              </Typography>
+              <Grid
+                justify="space-between"
+                container
+                spacing={24}
+                alignItems="center"
+              >
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2">
+                    by: <HeaderAvatar author={author} />
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  {this.renderEditButton(author, storyRoot)}
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item xs={12} md={6}>
               <Grid
@@ -136,7 +169,7 @@ class StoryWriter extends React.Component {
             </Grid>
           </Grid>
         </Paper>
-        <TextShow textId={storyRoot._rootTextId}/>
+        <TextShow textId={storyRoot._rootTextId} />
       </div>
     );
   }
@@ -145,7 +178,8 @@ class StoryWriter extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     storyRoot: state.user.storyRootDetail,
-    author: state.user.authorDetail
+    author: state.user.authorDetail,
+    selfAuthorId: state.user.authorId
   };
 };
 
