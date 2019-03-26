@@ -4,8 +4,7 @@ import {
   EDIT_TEXT,
   DELETE_TEXT,
   LOGOUT,
-  ONSELECT_AUTHOR,
-  FETCH_STORY_ROOT
+  ONSELECT_AUTHOR
 } from "../actions/types";
 import _ from "lodash";
 
@@ -17,8 +16,6 @@ export default (state = INTIAL_STATE, action) => {
       return { ...state, ..._.mapKeys(action.payload, "_id") };
     case ADD_TEXT:
       return { ...state, [action.payload._id]: action.payload };
-    case FETCH_STORY_ROOT:
-      return { ...state, [action.payload.rootText._id]: action.payload.rootText };
     case EDIT_TEXT:
       return { ...state, [action.payload._id]: action.payload };
     case DELETE_TEXT:

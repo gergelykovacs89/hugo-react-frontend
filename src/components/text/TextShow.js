@@ -10,6 +10,9 @@ import {
 } from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
 import CustomTextEditor from "../text/CustomTextEditor";
+import { convertToRaw } from "draft-js";
+import { fetchText, updateText } from "../../actions/text";
+
 const styles = theme => ({
   paper: {
     padding: theme.spacing.unit * 2,
@@ -33,19 +36,32 @@ class TextShow extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({
-      readerState: EditorState.createWithContent(
-        convertFromRaw(JSON.parse(this.props.text.text))
-      )
-    });
+    this.props.fetchText(this.props.textId);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.text !== this.props.text) {
+      this.setState({
+        readerState: EditorState.createWithContent(
+          convertFromRaw(JSON.parse(nextProps.text.text))
+        )
+      });
+    }
   }
 
   handleEditorChange = editorState => {
     this.setState({ editorState });
   };
 
-  handleSave = editorState => {
-    this.props.updateText(editorState);
+  handleSave = () => {
+    this.setState({
+      editMode: !this.state.editMode,
+      readerState: null
+    });
+    let contentState = JSON.stringify(
+      convertToRaw(this.state.editorState.getCurrentContent())
+    );
+    this.props.updateText(contentState, this.props.textId);
   };
 
   circularProgress = (
@@ -107,15 +123,7 @@ class TextShow extends React.Component {
             />
           </Grid>
           <Grid item xs={12} md={2}>
-            <Button
-              variant="contained"
-              onClick={() =>
-                this.setState({
-                  editMode: !this.state.editMode,
-                  readerState: this.state.editorState
-                })
-              }
-            >
+            <Button variant="contained" onClick={this.handleSave}>
               save
             </Button>
           </Grid>
@@ -125,7 +133,7 @@ class TextShow extends React.Component {
   );
 
   render() {
-    if (!this.props.text) {
+    if (!this.props.text || !this.state.readerState) {
       return this.circularProgress;
     }
     const { classes } = this.props;
@@ -143,11 +151,11 @@ const textShowWithStyles = withStyles(styles)(TextShow);
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    text: state.texts[ownProps.textId]
+    text: state.user.texts[ownProps.textId]
   };
 };
 
 export default connect(
   mapStateToProps,
-  {}
+  { fetchText, updateText }
 )(textShowWithStyles);

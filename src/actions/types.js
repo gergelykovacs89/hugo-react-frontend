@@ -26,3 +26,4 @@ export const ADD_TEXT = "ADD_TEXT";
 export const SET_TEXTS = "SET_TEXTS";
 export const EDIT_TEXT = "EDIT_TEXT";
 export const DELETE_TEXT = "DELETE_TEXT";
+export const LOAD_TEXT = "LOAD_TEXT";

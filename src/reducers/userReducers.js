@@ -11,7 +11,8 @@ import {
   UN_FOLLOW_SUCCESS,
   UN_SET_AUTHOR,
   UN_SET_STORY_ROOT,
-  FETCH_STORY_ROOT
+  FETCH_STORY_ROOT,
+  LOAD_TEXT
 } from "../actions/types";
 
 const INTIAL_STATE = {
@@ -22,7 +23,8 @@ const INTIAL_STATE = {
   error: null,
   message: null,
   authorDetail: null,
-  storyRootDetail: null
+  storyRootDetail: null,
+  texts: {}
 };
 
 export default (state = INTIAL_STATE, action) => {
@@ -55,7 +57,17 @@ export default (state = INTIAL_STATE, action) => {
     case GET_AUTHOR:
       return { ...state, authorDetail: action.payload };
     case FETCH_STORY_ROOT:
-      return { ...state, storyRootDetail: action.payload.root, authorDetail: action.payload.author };
+      return {
+        ...state,
+        storyRootDetail: action.payload.root,
+        authorDetail: action.payload.author
+      };
+    case LOAD_TEXT:
+      return {
+        ...state,
+        texts: { ...state.texts, [action.payload._id]: action.payload }
+      };
+
     case UN_SET_AUTHOR:
       return { ...state, authorDetail: null };
     case UN_SET_STORY_ROOT:
