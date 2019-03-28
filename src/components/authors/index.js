@@ -29,7 +29,8 @@ class Authors extends React.Component {
             container
             className={classes.demo}
             justify="center"
-            spacing={16}
+            spacing={24}
+            alignItems="center"
           >
             {this.renderAuthors(authors)}
             <Grid key={"createAuthor"} item>
@@ -42,8 +43,8 @@ class Authors extends React.Component {
                   marginTop: "14vw",
                   width: "14vw",
                   height: "14vw",
-                  minWidth: "125px",
-                  minHeight: "125px"
+                  minWidth: "200px",
+                  minHeight: "200px"
                 }}
               >
                 + author

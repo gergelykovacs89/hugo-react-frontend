@@ -9,7 +9,8 @@ import {
   withStyles,
   Grid,
   Typography,
-  Button
+  Button,
+  CardMedia
 } from "@material-ui/core";
 import {
   RemoveRedEye,
@@ -32,11 +33,8 @@ const styles = theme => ({
       width: "80vw"
     }
   },
-  avatar: {
-    minHeight: "100px",
-    minWidth: "100px",
-    height: "100%",
-    width: "100%"
+  media: {
+    height: 280
   },
   title: {
     textAlign: "justify",
@@ -116,10 +114,10 @@ class StoryWriter extends React.Component {
               </Typography>
             </Grid>
             <Grid item xs={8} md={6}>
-              <img
-                src={storyRoot.imgPath}
-                alt={storyRoot.title}
-                className={classes.avatar}
+              <CardMedia
+                className={classes.media}
+                image={storyRoot.imgPath}
+                title={storyRoot.title}
               />
             </Grid>
           </Grid>

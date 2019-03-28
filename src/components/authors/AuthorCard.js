@@ -16,16 +16,14 @@ import { deleteAuthor, selectAuthor } from "../../actions";
 const styles = {
   card: {
     marginTop: "10vw",
-    height: "23vw",
-    width: "14vw",
-    minWidth: "146px",
-    minHeight: "250px"
+    width: "16vw",
+    minWidth: "236px"
   },
   media: {
-    height: "14vw",
-    width: "14vw",
-    minWidth: "146px",
-    minHeight: "146px"
+    height: "16vw",
+    width: "16vw",
+    minWidth: "236px",
+    minHeight: "180px"
   }
 };
 
