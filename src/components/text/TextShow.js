@@ -93,7 +93,7 @@ class TextShow extends React.Component {
   textRender = classes => (
     <Fragment>
       <Paper className={classes.paper}>
-        <Grid justify="flex-start" container spacing={24} alignItems="center">
+        <Grid justify="flex-start" container spacing={24} alignItems="flex-start">
           <Grid item xs={12} md={2}>
             {this.renderEditButton(this.props.text)}
           </Grid>
@@ -112,7 +112,7 @@ class TextShow extends React.Component {
   editRender = classes => (
     <Fragment>
       <Paper className={classes.paper}>
-        <Grid justify="flex-start" container spacing={24} alignItems="center">
+        <Grid justify="flex-start" container spacing={24} alignItems="flex-start">
           <Grid item xs={12} md={2}>
             <Button
               variant="contained"
