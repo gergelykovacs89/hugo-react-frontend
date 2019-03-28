@@ -4,8 +4,18 @@
   background: whitesmoke;
 }
 
-.editor :global(.public-DraftEditor-content) {
-  /* min-height: 260px; */
+.editorFull {
+  padding: 15px;
+  margin-top: 3.5vh;
+  box-sizing: border-box;
+  cursor: text;
+  background: whitesmoke;
+  border: 2px solid grey;
+  border-radius: 5px;
+}
+
+.editorFull :global(.public-DraftEditor-content) {
+  min-height: 260px;
 }
 
 .headlineButtonWrapper {

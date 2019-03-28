@@ -7,10 +7,7 @@ import history from "../../history";
 
 const styles = theme => ({
   main: {
-    width: "auto",
     display: "block", // Fix IE 11 issue.
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
     [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
       width: "70vw",
       marginLeft: "auto",
@@ -77,7 +74,8 @@ class StoryForm extends React.Component {
       classes,
       title,
       editorState,
-      onEditorChange
+      onEditorChange,
+      full
     } = this.props;
     return (
       <main className={classes.main}>
@@ -129,8 +127,10 @@ class StoryForm extends React.Component {
               />
             </div>
             <CustomTextEditor
+              className={full ? classes.editorFull : null}
               editorState={editorState}
               onEditorChange={onEditorChange}
+              isFull={true}
             />
             <Button
               type="submit"
