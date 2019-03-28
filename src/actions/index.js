@@ -16,10 +16,12 @@ import {
   GET_AUTHOR,
   FOLLOW_SUCCESS,
   UN_FOLLOW_SUCCESS,
-  UN_SET_AUTHOR
+  UN_SET_AUTHOR,
+  SET_STORY_ROOTS_FOR_VISITED_AUTHOR
 } from "./types";
 import users from "../apis/users";
 import authors from "../apis/authors";
+import story from "../apis/story";
 import setAuthToken from "../helpers/setAuthToken";
 import history from "../history";
 import jwt_decode from "jwt-decode";
@@ -36,6 +38,7 @@ export const registerRequest = formValues => async dispatch => {
 };
 
 export const loginRequest = formValues => async dispatch => {
+  setAuthToken(localStorage.getItem("jwtToken"));
   dispatch({ type: LOGIN_START });
   try {
     let response = null;
@@ -105,6 +108,19 @@ export const getAuthor = authorId => async dispatch => {
     dispatch({ type: GET_AUTHOR, payload: response.data.author });
   } catch (error) {
     handleFormErrors(error, dispatch);
+  }
+};
+
+export const getStoryRootsForVisitedAuthor = authorId => async dispatch => {
+  try {
+    setAuthToken(localStorage.getItem("jwtToken"));
+    const response = await story.get(`/story-roots/${authorId}`);
+    dispatch({
+      type: SET_STORY_ROOTS_FOR_VISITED_AUTHOR,
+      payload: response.data
+    });
+  } catch (error) {
+    console.log(error);
   }
 };
 

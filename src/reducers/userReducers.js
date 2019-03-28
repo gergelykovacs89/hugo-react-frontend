@@ -12,8 +12,10 @@ import {
   UN_SET_AUTHOR,
   UN_SET_STORY_ROOT,
   FETCH_STORY_ROOT,
-  LOAD_TEXT
+  LOAD_TEXT,
+  SET_STORY_ROOTS_FOR_VISITED_AUTHOR
 } from "../actions/types";
+import _ from "lodash";
 
 const INTIAL_STATE = {
   isSignedIn: false,
@@ -24,7 +26,8 @@ const INTIAL_STATE = {
   message: null,
   authorDetail: null,
   storyRootDetail: null,
-  texts: {}
+  texts: {},
+  storyRoots: {}
 };
 
 export default (state = INTIAL_STATE, action) => {
@@ -56,6 +59,9 @@ export default (state = INTIAL_STATE, action) => {
       return { ...state, isAuthorSelected: false, authorId: null };
     case GET_AUTHOR:
       return { ...state, authorDetail: action.payload };
+    case SET_STORY_ROOTS_FOR_VISITED_AUTHOR: {
+      return { ...state, storyRoots: { ..._.mapKeys(action.payload, "_id") } };
+    }
     case FETCH_STORY_ROOT:
       return {
         ...state,
@@ -69,9 +75,9 @@ export default (state = INTIAL_STATE, action) => {
       };
 
     case UN_SET_AUTHOR:
-      return { ...state, authorDetail: null };
+      return { ...state, authorDetail: null, storyRoots: {} };
     case UN_SET_STORY_ROOT:
-      return { ...state, storyRootDetail: null };
+      return { ...state, storyRootDetail: null, texts: {} };
     case FOLLOW_SUCCESS:
       return {
         ...state,

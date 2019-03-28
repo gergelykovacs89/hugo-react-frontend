@@ -31,7 +31,6 @@ export const updateStory = (formValues, storyRootId) => async (
   try {
     formValues._authorId = getState().user.authorId;
     const response = await story.put(`/update/${storyRootId}`, formValues);
-    console.log(response);
     dispatch({
       type: EDIT_STORY_ROOT_SUCCESS,
       payload: response.data.storyRootUpdated
