@@ -1,6 +1,12 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
-import { getAuthor, followAuthor, unFollowAuthor, unSetAuthor } from "../../actions";
+import {
+  getAuthor,
+  followAuthor,
+  unFollowAuthor,
+  unSetAuthor,
+  getStoryRootsForVisitedAuthor
+} from "../../actions";
 import {
   Paper,
   Typography,
@@ -10,6 +16,7 @@ import {
   Button,
   Avatar
 } from "@material-ui/core";
+import StoryShow from "../story/StoryShow";
 
 const styles = theme => ({
   root: {
@@ -65,11 +72,13 @@ const styles = theme => ({
 class AuthorDetail extends React.Component {
   componentDidMount() {
     this.props.getAuthor(this.props.match.params.id);
+    this.props.getStoryRootsForVisitedAuthor(this.props.match.params.id);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.match.params.id !== this.props.match.params.id) {
       this.props.getAuthor(nextProps.match.params.id);
+      this.props.getStoryRootsForVisitedAuthor(this.props.match.params.id);
     }
   }
 
@@ -149,7 +158,7 @@ class AuthorDetail extends React.Component {
     if (!this.props.author || !this.props.selectedAuthor) {
       return this.circularProgress;
     }
-    const { author, selectedAuthor, classes, isSelf } = this.props;
+    const { author, selectedAuthor, classes, isSelf, storyRoots } = this.props;
     return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
@@ -186,6 +195,9 @@ class AuthorDetail extends React.Component {
             <Grid item xs={6} />
           </Grid>
         </Paper>
+        <Paper className={classes.paper}>
+          <StoryShow storyRoots={storyRoots} />
+        </Paper>
       </div>
     );
   }
@@ -195,7 +207,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     author: state.user.authorDetail,
     selectedAuthor: state.authors[state.user.authorId],
-    isSelf: state.authors[ownProps.match.params.id] ? true : false
+    isSelf: state.authors[ownProps.match.params.id] ? true : false,
+    storyRoots: state.user.storyRoots
   };
 };
 
@@ -203,5 +216,11 @@ const AuthorDetailWithStyles = withStyles(styles)(AuthorDetail);
 
 export default connect(
   mapStateToProps,
-  { getAuthor, followAuthor, unFollowAuthor, unSetAuthor }
+  {
+    getAuthor,
+    followAuthor,
+    unFollowAuthor,
+    unSetAuthor,
+    getStoryRootsForVisitedAuthor
+  }
 )(AuthorDetailWithStyles);
