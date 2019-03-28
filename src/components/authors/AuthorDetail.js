@@ -16,7 +16,7 @@ import {
   Button,
   Avatar
 } from "@material-ui/core";
-import StoryShow from "../story/StoryShow";
+import AuthorTabs from "./AuthorTabs";
 
 const styles = theme => ({
   root: {
@@ -24,7 +24,7 @@ const styles = theme => ({
   },
   paper: {
     padding: theme.spacing.unit * 2,
-    marginTop: "1vw",
+    marginTop: "0.5vw",
     [theme.breakpoints.up("sm")]: {
       marginTop: "1vw",
       margin: "auto",
@@ -159,6 +159,7 @@ class AuthorDetail extends React.Component {
       return this.circularProgress;
     }
     const { author, selectedAuthor, classes, isSelf, storyRoots } = this.props;
+    const isOwn = this.props.author._id === this.props.selectedAuthor._id;
     return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
@@ -181,7 +182,7 @@ class AuthorDetail extends React.Component {
               </Typography>
               <span>{this.renderButtons(classes, selectedAuthor, isSelf)}</span>
               <Typography variant="subtitle1" className={classes.authorData}>
-                {"0"} stories {author.followers.length} followers{" "}
+                {storyRoots.length} roots {author.followers.length} followers{" "}
                 {author.following.length} following
               </Typography>
               <Typography
@@ -196,7 +197,7 @@ class AuthorDetail extends React.Component {
           </Grid>
         </Paper>
         <Paper className={classes.paper}>
-          <StoryShow storyRoots={storyRoots} />
+          <AuthorTabs storyRoots={storyRoots} isSelf={isOwn} />
         </Paper>
       </div>
     );
@@ -208,7 +209,7 @@ const mapStateToProps = (state, ownProps) => {
     author: state.user.authorDetail,
     selectedAuthor: state.authors[state.user.authorId],
     isSelf: state.authors[ownProps.match.params.id] ? true : false,
-    storyRoots: state.user.storyRoots
+    storyRoots: Object.values(state.user.storyRoots)
   };
 };
 
