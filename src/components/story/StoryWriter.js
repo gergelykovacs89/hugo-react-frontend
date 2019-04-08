@@ -175,8 +175,8 @@ class StoryWriter extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    storyRoot: state.user.storyRootDetail,
-    author: state.user.authorDetail,
+    storyRoot: state.navigation.currentlyVisitedStoryRootDetail,
+    author: state.navigation.currentlyVisitedAuthorDetail,
     selfAuthorId: state.user.authorId
   };
 };

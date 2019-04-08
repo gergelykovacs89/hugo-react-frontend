@@ -206,10 +206,10 @@ class AuthorDetail extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    author: state.user.authorDetail,
+    author: state.navigation.currentlyVisitedAuthorDetail,
     selectedAuthor: state.authors[state.user.authorId],
     isSelf: state.authors[ownProps.match.params.id] ? true : false,
-    storyRoots: Object.values(state.user.storyRoots)
+    storyRoots: Object.values(state.navigation.currentlyVisitedAuthorStoryRoots)
   };
 };
 

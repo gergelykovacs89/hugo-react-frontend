@@ -161,7 +161,7 @@ const textShowWithStyles = withStyles(styles)(TextShow);
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    text: state.user.texts[ownProps.textId],
+    text: state.navigation.currentlyVisitedStoryRootTexts[ownProps.textId],
     selfAuthorId: state.user.authorId
   };
 };
