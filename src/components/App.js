@@ -13,6 +13,7 @@ import CreateStory from "./story/CreateStory";
 import StoryWriter from "./story/StoryWriter";
 import Immutable from "immutable";
 import EditStory from "./story/EditStory";
+import { PrivateRoute } from "./PrivateRoute";
 
 // See more: https://github.com/facebook/draft-js/issues/950
 Immutable.Iterable.noLengthWarning = true;
@@ -31,13 +32,13 @@ class App extends React.Component {
           <div>
             <Header />
             <Switch>
-              <Route path="/select-author" exact component={Authors} />
-              <Route path="/create-author" exact component={CreateAuthor} />
-              <Route path="/edit-author/:id" exact component={EditAuthor} />
+              <PrivateRoute path="/select-author" exact component={Authors} />
+              <PrivateRoute path="/create-author" exact component={CreateAuthor} />
+              <PrivateRoute path="/edit-author/:id" exact component={EditAuthor} />
               <Route path="/a/:id" exact component={AuthorDetail} />
-              <Route path="/s/create" exact component={CreateStory} />
-              <Route path="/s/update/:id" exact component={EditStory} />
-              <Route path="/sw/:id" exact component={StoryWriter} />
+              <PrivateRoute path="/s/create" exact component={CreateStory} />
+              <PrivateRoute path="/s/update/:id" exact component={EditStory} />
+              <PrivateRoute path="/sw/:id" exact component={StoryWriter} />
               <Route path="/register" exact component={Register} />
               <Route path="/login" exact component={Login} />
             </Switch>
