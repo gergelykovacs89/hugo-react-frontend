@@ -1,11 +1,5 @@
 import {
-  REGISTER_SUCCESS,
-  LOGIN_SUCCESS,
-  LOGOUT,
-  SELECT_AUTHOR,
-  LOGIN_START,
-  ONSELECT_AUTHOR,
-  LOGIN_FAILED
+  userConstants, authorConstants
 } from "../actions/types";
 
 const INTIAL_STATE = {
@@ -19,20 +13,20 @@ const INTIAL_STATE = {
 
 export default (state = INTIAL_STATE, action) => {
   switch (action.type) {
-    case REGISTER_SUCCESS:
+    case userConstants.REGISTER_SUCCESS:
       return { ...state, message: action.payload };
-    case LOGIN_START:
+    case userConstants.LOGIN_START:
       return { ...state, isSignedIn: null, isAuthorSelected: null };
-    case LOGIN_SUCCESS:
+    case userConstants.LOGIN_SUCCESS:
       return {
         ...state,
         userId: action.payload._id,
         isSignedIn: true,
         isAuthorSelected: false
       };
-    case LOGIN_FAILED:
+    case userConstants.LOGIN_FAILED:
       return { ...state, isSignedIn: false, isAuthorSelected: false };
-    case LOGOUT:
+    case userConstants.LOGOUT:
       return {
         ...state,
         isSignedIn: false,
@@ -40,9 +34,9 @@ export default (state = INTIAL_STATE, action) => {
         isAuthorSelected: false,
         authorId: null
       };
-    case SELECT_AUTHOR:
+    case authorConstants.SELECT_AUTHOR:
       return { ...state, isAuthorSelected: true, authorId: action.payload };
-    case ONSELECT_AUTHOR:
+    case authorConstants.ONSELECT_AUTHOR:
       return { ...state, isAuthorSelected: false, authorId: null };
     default:
       return state;

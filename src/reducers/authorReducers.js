@@ -1,32 +1,23 @@
-import {
-  SET_AUTHORS,
-  ADD_AUTHOR_SUCCESS,
-  FETCH_AUTHOR,
-  EDIT_AUTHOR_SUCCESS,
-  DELETE_AUTHOR_SUCCESS,
-  LOGOUT,
-  FOLLOW_SUCCESS,
-  UN_FOLLOW_SUCCESS
-} from "../actions/types";
+import { userConstants, authorConstants } from "../actions/types";
 import _ from "lodash";
 
 const INTIAL_STATE = {};
 
 export default (state = INTIAL_STATE, action) => {
   switch (action.type) {
-    case SET_AUTHORS:
+    case userConstants.SET_AUTHORS:
       return { ...state, ..._.mapKeys(action.payload, "_id") };
-    case ADD_AUTHOR_SUCCESS:
+    case authorConstants.ADD_AUTHOR_SUCCESS:
       return { ...state, [action.payload._id]: action.payload };
-    case FETCH_AUTHOR:
+    case authorConstants.FETCH_AUTHOR:
       return { ...state, [action.payload._id]: action.payload };
-    case EDIT_AUTHOR_SUCCESS:
+    case authorConstants.EDIT_AUTHOR_SUCCESS:
       return { ...state, [action.payload._id]: action.payload };
-    case DELETE_AUTHOR_SUCCESS:
+    case authorConstants.DELETE_AUTHOR_SUCCESS:
       return _.omit(state, action.payload);
-    case LOGOUT:
+    case userConstants.LOGOUT:
       return {};
-    case FOLLOW_SUCCESS:
+    case authorConstants.FOLLOW_SUCCESS:
       return {
         ...state,
         [action.payload.selectAuthorId]: {
@@ -37,7 +28,7 @@ export default (state = INTIAL_STATE, action) => {
           ]
         }
       };
-    case UN_FOLLOW_SUCCESS:
+    case authorConstants.UN_FOLLOW_SUCCESS:
       return {
         ...state,
         [action.payload.selectAuthorId]: {
