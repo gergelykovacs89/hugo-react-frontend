@@ -1,4 +1,9 @@
-import { userConstants, authorConstants, storyRootConstants, textConstants } from "../actions/types";
+import {
+  userConstants,
+  authorConstants,
+  storyRootConstants,
+  textConstants
+} from "../actions/types";
 import _ from "lodash";
 
 const INTIAL_STATE = {
@@ -6,7 +11,8 @@ const INTIAL_STATE = {
   currentlyVisitedAuthorStoryRoots: {},
   currentlyVisitedAuthorTexts: {},
   currentlyVisitedStoryRootDetail: null,
-  currentlyVisitedStoryRootTexts: {}
+  currentlyVisitedStoryRootTexts: {},
+  currentLastTextIdOfStory: {}
 };
 
 export default (state = INTIAL_STATE, action) => {
@@ -42,9 +48,26 @@ export default (state = INTIAL_STATE, action) => {
         currentlyVisitedStoryRootTexts: {
           ...state.currentlyVisitedStoryRootTexts,
           [action.payload._id]: action.payload
+        },
+        currentLastTextIdOfStory: action.payload._id
+      };
+    case textConstants.UPDATE_TEXT:
+      return {
+        ...state,
+        currentlyVisitedStoryRootTexts: {
+          ...state.currentlyVisitedStoryRootTexts,
+          [action.payload._id]: action.payload
         }
       };
-
+    case textConstants.UNLOAD_TEXT:
+      return {
+        ...state,
+        currentlyVisitedStoryRootTexts: _.omit(
+          state.currentlyVisitedStoryRootTexts,
+          action.payload.textId
+        ),
+        currentLastTextIdOfStory: action.payload.parentId
+      };
     case authorConstants.UN_SET_AUTHOR:
       return {
         ...state,

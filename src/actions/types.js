@@ -13,8 +13,10 @@ export const textConstants = {
   ADD_TEXT: "ADD_TEXT",
   SET_TEXTS: "SET_TEXTS",
   EDIT_TEXT: "EDIT_TEXT",
+  UPDATE_TEXT: "UPDATE_TEXT",
   DELETE_TEXT: "DELETE_TEXT",
-  LOAD_TEXT: "LOAD_TEXT"
+  LOAD_TEXT: "LOAD_TEXT",
+  UNLOAD_TEXT: "UNLOAD_TEXT"
 };
 
 export const userConstants = {

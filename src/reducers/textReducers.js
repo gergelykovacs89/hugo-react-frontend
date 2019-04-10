@@ -1,4 +1,8 @@
-import { userConstants, authorConstants, textConstants } from "../actions/types";
+import {
+  userConstants,
+  authorConstants,
+  textConstants
+} from "../actions/types";
 import _ from "lodash";
 
 const INTIAL_STATE = {};
