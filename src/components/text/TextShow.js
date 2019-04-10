@@ -11,7 +11,7 @@ import {
 import { Edit, ShareOutlined } from "@material-ui/icons";
 import CustomTextEditor from "../text/CustomTextEditor";
 import { convertToRaw } from "draft-js";
-import { fetchText, updateText } from "../../actions/text";
+import { fetchText, updateText, forkText, deleteTextById } from "../../actions/text";
 
 const styles = theme => ({
   paper: {
@@ -31,7 +31,8 @@ class TextShow extends React.Component {
     this.state = {
       editorState: EditorState.createEmpty(),
       readerState: EditorState.createEmpty(),
-      editMode: false
+      editMode: props.editMode,
+      isFull: props.isFull
     };
   }
 
@@ -56,7 +57,8 @@ class TextShow extends React.Component {
   handleSave = () => {
     this.setState({
       editMode: !this.state.editMode,
-      readerState: null
+      readerState: null,
+      isFull: false
     });
     let contentState = JSON.stringify(
       convertToRaw(this.state.editorState.getCurrentContent())
@@ -87,7 +89,10 @@ class TextShow extends React.Component {
   renderForkButton = () => {
     return (
       <Fragment>
-        <Button variant="contained" onClick={() => this.forkText(this.props.text._id)}>
+        <Button
+          variant="contained"
+          onClick={() => this.forkText(this.props.text._id)}
+        >
           <ShareOutlined /> Fork it
         </Button>
       </Fragment>
@@ -95,7 +100,10 @@ class TextShow extends React.Component {
   };
 
   forkText = parentTextId => {
-    console.log(parentTextId);
+    let text = JSON.stringify(
+      convertToRaw(EditorState.createEmpty().getCurrentContent())
+    );
+    this.props.forkText(text, parentTextId, this.props.text._authorId);
   };
 
   circularProgress = (
@@ -124,12 +132,22 @@ class TextShow extends React.Component {
             />
           </Grid>
           <Grid item xs={12} md={2}>
-            {this.renderForkButton()}
+            {this.props.isLast ? this.renderForkButton() : null}
           </Grid>
         </Grid>
       </Paper>
     </Fragment>
   );
+
+  onCancel = () => {
+    if (this.state.isFull) {
+      this.props.deleteTextById(this.props.text._id, this.props.text._parentTextId);
+    }
+    this.setState({
+      editMode: !this.state.editMode,
+      editorState: this.state.readerState
+    });
+  };
 
   editRender = classes => (
     <Fragment>
@@ -141,15 +159,7 @@ class TextShow extends React.Component {
           alignItems="flex-start"
         >
           <Grid item xs={12} md={2}>
-            <Button
-              variant="contained"
-              onClick={() =>
-                this.setState({
-                  editMode: !this.state.editMode,
-                  editorState: this.state.readerState
-                })
-              }
-            >
+            <Button variant="contained" onClick={this.onCancel}>
               cancel
             </Button>
           </Grid>
@@ -157,6 +167,8 @@ class TextShow extends React.Component {
             <CustomTextEditor
               editorState={this.state.editorState}
               onEditorChange={this.handleEditorChange}
+              isFull={this.state.isFull}
+              autofocus={this.state.isFull}
             />
           </Grid>
           <Grid item xs={12} md={2}>
@@ -173,11 +185,11 @@ class TextShow extends React.Component {
     if (!this.props.text || !this.state.readerState) {
       return this.circularProgress;
     }
-    const { classes } = this.props;
+    const { classes, isFull } = this.props;
     return (
       <Fragment>
         {this.state.editMode
-          ? this.editRender(classes)
+          ? this.editRender(classes, isFull)
           : this.textRender(classes)}
       </Fragment>
     );
@@ -189,11 +201,12 @@ const textShowWithStyles = withStyles(styles)(TextShow);
 const mapStateToProps = (state, ownProps) => {
   return {
     text: state.navigation.currentlyVisitedStoryRootTexts[ownProps.textId],
-    selfAuthorId: state.user.authorId
+    selfAuthorId: state.user.authorId,
+    isLast: state.navigation.currentLastTextIdOfStory === ownProps.textId
   };
 };
 
 export default connect(
   mapStateToProps,
-  { fetchText, updateText }
+  { fetchText, updateText, forkText, deleteTextById }
 )(textShowWithStyles);

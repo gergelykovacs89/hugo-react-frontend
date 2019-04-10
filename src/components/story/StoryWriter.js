@@ -50,13 +50,25 @@ const styles = theme => ({
 });
 
 class StoryWriter extends React.Component {
+  scrollToBottom = () => {
+    this.textsEnd.current.scrollIntoView({block: 'end', behavior: "smooth" });
+  };
+
   componentDidMount() {
     this.props.getStoryRoot(this.props.match.params.id);
+    this.textsEnd = React.createRef();
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.match.params.id !== this.props.match.params.id) {
       this.props.getStoryRoot(nextProps.match.params.id);
+    }
+
+    if (
+      nextProps.texts.length !== this.props.texts.length &&
+      this.props.texts.length !== 0
+    ) {
+      this.scrollToBottom();
     }
   }
 
@@ -100,8 +112,17 @@ class StoryWriter extends React.Component {
   };
 
   renderTexts = () => {
-
-  }
+    return this.props.texts.map(text =>
+      text._id === this.props.storyRoot._rootTextId ? null : (
+        <TextShow
+          key={text._id}
+          textId={text._id}
+          editMode={this.props.lastTextId === text._id}
+          isFull={this.props.lastTextId === text._id}
+        />
+      )
+    );
+  };
 
   render() {
     if (!this.props.storyRoot || !this.props.author) {
@@ -172,7 +193,8 @@ class StoryWriter extends React.Component {
           </Grid>
         </Paper>
         <TextShow textId={storyRoot._rootTextId} />
-        
+        <Fragment>{this.renderTexts()}</Fragment>
+        <div ref={this.textsEnd} />
       </div>
     );
   }
@@ -183,7 +205,8 @@ const mapStateToProps = (state, ownProps) => {
     storyRoot: state.navigation.currentlyVisitedStoryRootDetail,
     author: state.navigation.currentlyVisitedAuthorDetail,
     selfAuthorId: state.user.authorId,
-    texts: Object.values(state.navigation.currentlyVisitedStoryRootTexts)
+    texts: Object.values(state.navigation.currentlyVisitedStoryRootTexts),
+    lastTextId: state.navigation.currentLastTextIdOfStory
   };
 };
 

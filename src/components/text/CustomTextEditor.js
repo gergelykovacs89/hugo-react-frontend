@@ -81,6 +81,11 @@ class HeadlinesButton extends React.Component {
 }
 
 export default class CustomTextEditor extends React.Component {
+  componentDidMount() {
+    if (this.props.autofocus) {
+      this.focus();
+    }
+  }
   focus = () => {
     this.editor.focus();
   };
