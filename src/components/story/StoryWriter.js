@@ -99,6 +99,10 @@ class StoryWriter extends React.Component {
     }
   };
 
+  renderTexts = () => {
+
+  }
+
   render() {
     if (!this.props.storyRoot || !this.props.author) {
       return this.circularProgress;
@@ -168,6 +172,7 @@ class StoryWriter extends React.Component {
           </Grid>
         </Paper>
         <TextShow textId={storyRoot._rootTextId} />
+        
       </div>
     );
   }
@@ -177,7 +182,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     storyRoot: state.navigation.currentlyVisitedStoryRootDetail,
     author: state.navigation.currentlyVisitedAuthorDetail,
-    selfAuthorId: state.user.authorId
+    selfAuthorId: state.user.authorId,
+    texts: Object.values(state.navigation.currentlyVisitedStoryRootTexts)
   };
 };
 

@@ -8,7 +8,7 @@ import {
   Grid,
   Button
 } from "@material-ui/core";
-import { Edit } from "@material-ui/icons";
+import { Edit, ShareOutlined } from "@material-ui/icons";
 import CustomTextEditor from "../text/CustomTextEditor";
 import { convertToRaw } from "draft-js";
 import { fetchText, updateText } from "../../actions/text";
@@ -84,6 +84,20 @@ class TextShow extends React.Component {
     }
   };
 
+  renderForkButton = () => {
+    return (
+      <Fragment>
+        <Button variant="contained" onClick={() => this.forkText(this.props.text._id)}>
+          <ShareOutlined /> Fork it
+        </Button>
+      </Fragment>
+    );
+  };
+
+  forkText = parentTextId => {
+    console.log(parentTextId);
+  };
+
   circularProgress = (
     <Fragment>
       <CircularProgress color="inherit" />
@@ -93,7 +107,12 @@ class TextShow extends React.Component {
   textRender = classes => (
     <Fragment>
       <Paper className={classes.paper}>
-        <Grid justify="flex-start" container spacing={24} alignItems="flex-start">
+        <Grid
+          justify="flex-start"
+          container
+          spacing={24}
+          alignItems="flex-start"
+        >
           <Grid item xs={12} md={2}>
             {this.renderEditButton(this.props.text)}
           </Grid>
@@ -104,6 +123,9 @@ class TextShow extends React.Component {
               readOnly={true}
             />
           </Grid>
+          <Grid item xs={12} md={2}>
+            {this.renderForkButton()}
+          </Grid>
         </Grid>
       </Paper>
     </Fragment>
@@ -112,7 +134,12 @@ class TextShow extends React.Component {
   editRender = classes => (
     <Fragment>
       <Paper className={classes.paper}>
-        <Grid justify="flex-start" container spacing={24} alignItems="flex-start">
+        <Grid
+          justify="flex-start"
+          container
+          spacing={24}
+          alignItems="flex-start"
+        >
           <Grid item xs={12} md={2}>
             <Button
               variant="contained"
