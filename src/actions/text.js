@@ -75,3 +75,12 @@ export const deleteTextById = (textId, parentId) => async (
     console.log(error);
   }
 };
+
+export const fetchChildTexts = _parentTextId => async (dispatch, getState) => {
+  try {
+    const response = await textApi.get(`/children/${_parentTextId}`);
+    dispatch({ type: textConstants.SET_CHILD_TEXTS, payload: response.data.childTexts });
+  } catch (error) {
+    console.log(error);
+  }
+};

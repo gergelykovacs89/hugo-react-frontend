@@ -24,7 +24,8 @@ export default (state = INTIAL_STATE, action) => {
         currentlyVisitedAuthorStoryRoots: {},
         currentlyVisitedAuthorTexts: {},
         currentlyVisitedStoryRootDetail: null,
-        currentlyVisitedStoryRootTexts: {}
+        currentlyVisitedStoryRootTexts: {},
+        currentlyVisitedChildTexts: {}
       };
     case authorConstants.GET_AUTHOR:
       return { ...state, currentlyVisitedAuthorDetail: action.payload };
@@ -101,6 +102,10 @@ export default (state = INTIAL_STATE, action) => {
           )
         }
       };
+    case textConstants.SET_CHILD_TEXTS:
+      return { ...state, currentlyVisitedChildTexts: action.payload };
+    case textConstants.UNSET_CHILD_TEXTS:
+      return { ...state, currentlyVisitedChildTexts: {} };
     default:
       return state;
   }
