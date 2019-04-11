@@ -6,12 +6,20 @@ import {
   CircularProgress,
   withStyles,
   Grid,
-  Button
+  Button,
+  IconButton
 } from "@material-ui/core";
 import { Edit, ShareOutlined } from "@material-ui/icons";
+import SaveIcon from "@material-ui/icons/Save";
 import CustomTextEditor from "../text/CustomTextEditor";
 import { convertToRaw } from "draft-js";
-import { fetchText, updateText, forkText, deleteTextById } from "../../actions/text";
+import {
+  fetchText,
+  updateText,
+  forkText,
+  deleteTextById
+} from "../../actions/text";
+import AuthorDetailByText from "../authors/AuthorDetailByText";
 
 const styles = theme => ({
   paper: {
@@ -22,6 +30,27 @@ const styles = theme => ({
       margin: "auto",
       width: "80vw"
     }
+  },
+  editButton: {
+    color: "black",
+    backgroundColor: "#ffd11a",
+    "&:hover": {
+      backgroundColor: "#e6b800"
+    },
+    marginRight: "1vw",
+    [theme.breakpoints.up("sm")]: {
+      marginBottom: "1vw"
+    }
+  },
+  cancelButton: {
+    marginRight: "1vw",
+    [theme.breakpoints.up("sm")]: {
+      marginBottom: "1vw"
+    }
+  },
+  saveButton: {},
+  iconSmall: {
+    fontSize: 20
   }
 });
 
@@ -70,7 +99,8 @@ class TextShow extends React.Component {
     if (this.props.selfAuthorId === text._authorId) {
       return (
         <Fragment>
-          <Button
+          <IconButton
+            className={this.props.classes.editButton}
             variant="contained"
             onClick={() =>
               this.setState({
@@ -80,7 +110,7 @@ class TextShow extends React.Component {
             }
           >
             <Edit />
-          </Button>
+          </IconButton>
         </Fragment>
       );
     }
@@ -103,7 +133,7 @@ class TextShow extends React.Component {
     let text = JSON.stringify(
       convertToRaw(EditorState.createEmpty().getCurrentContent())
     );
-    this.props.forkText(text, parentTextId, this.props.text._authorId);
+    this.props.forkText(text, parentTextId, this.props.selfAuthorId);
   };
 
   circularProgress = (
@@ -112,17 +142,29 @@ class TextShow extends React.Component {
     </Fragment>
   );
 
+  renderBrowseButton = () => {
+    return (
+      <Button
+        variant="contained"
+        onClick={() => this.onBrowseForks(this.props.textId)}
+      >
+        Browse forks
+      </Button>
+    );
+  };
+
   textRender = classes => (
     <Fragment>
       <Paper className={classes.paper}>
         <Grid
-          justify="flex-start"
+          justify="space-around"
           container
           spacing={24}
           alignItems="flex-start"
         >
           <Grid item xs={12} md={2}>
-            {this.renderEditButton(this.props.text)}
+            <AuthorDetailByText author={this.props.text.author} noName={true} />
+            {this.props.isLast ? this.renderBrowseButton() : null}
           </Grid>
           <Grid item xs={12} md={8}>
             <Editor
@@ -132,6 +174,7 @@ class TextShow extends React.Component {
             />
           </Grid>
           <Grid item xs={12} md={2}>
+            {this.renderEditButton(this.props.text)}
             {this.props.isLast ? this.renderForkButton() : null}
           </Grid>
         </Grid>
@@ -139,9 +182,16 @@ class TextShow extends React.Component {
     </Fragment>
   );
 
+  onBrowseForks = textId => {
+    this.props.handleBrowseForks(textId);
+  };
+
   onCancel = () => {
     if (this.state.isFull) {
-      this.props.deleteTextById(this.props.text._id, this.props.text._parentTextId);
+      this.props.deleteTextById(
+        this.props.text._id,
+        this.props.text._parentTextId
+      );
     }
     this.setState({
       editMode: !this.state.editMode,
@@ -159,9 +209,7 @@ class TextShow extends React.Component {
           alignItems="flex-start"
         >
           <Grid item xs={12} md={2}>
-            <Button variant="contained" onClick={this.onCancel}>
-              cancel
-            </Button>
+            {/* TODO nextTextLoading??? */}
           </Grid>
           <Grid item xs={12} md={8}>
             <CustomTextEditor
@@ -172,7 +220,20 @@ class TextShow extends React.Component {
             />
           </Grid>
           <Grid item xs={12} md={2}>
-            <Button variant="contained" onClick={this.handleSave}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={this.onCancel}
+              className={classes.cancelButton}
+            >
+              cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={this.handleSave}
+              className={classes.saveButton}
+            >
+              <SaveIcon className={classes.iconSmall} />
               save
             </Button>
           </Grid>

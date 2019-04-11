@@ -19,6 +19,7 @@ import {
 } from "@material-ui/icons";
 import { Link as RouterLink } from "react-router-dom";
 import TextShow from "../text/TextShow";
+import TextSelectDrawer from "../text/TextSelectDrawer";
 
 const styles = theme => ({
   root: {
@@ -50,8 +51,11 @@ const styles = theme => ({
 });
 
 class StoryWriter extends React.Component {
+  state = {
+    parentTextId: null
+  };
   scrollToBottom = () => {
-    this.textsEnd.current.scrollIntoView({block: 'end', behavior: "smooth" });
+    this.textsEnd.current.scrollIntoView({ block: "end", behavior: "smooth" });
   };
 
   componentDidMount() {
@@ -111,6 +115,14 @@ class StoryWriter extends React.Component {
     }
   };
 
+  handleBrowseForks = parentTextId => {
+    this.setState({ parentTextId });
+  };
+
+  onCloseBrowseForks = () => {
+    this.setState({ parentTextId: null });
+  };
+
   renderTexts = () => {
     return this.props.texts.map(text =>
       text._id === this.props.storyRoot._rootTextId ? null : (
@@ -119,6 +131,7 @@ class StoryWriter extends React.Component {
           textId={text._id}
           editMode={this.props.lastTextId === text._id}
           isFull={this.props.lastTextId === text._id}
+          handleBrowseForks={this.handleBrowseForks}
         />
       )
     );
@@ -192,8 +205,15 @@ class StoryWriter extends React.Component {
             </Grid>
           </Grid>
         </Paper>
-        <TextShow textId={storyRoot._rootTextId} />
+        <TextShow
+          textId={storyRoot._rootTextId}
+          handleBrowseForks={this.handleBrowseForks}
+        />
         <Fragment>{this.renderTexts()}</Fragment>
+        <TextSelectDrawer
+          parentTextId={this.state.parentTextId}
+          onClose={this.onCloseBrowseForks}
+        />
         <div ref={this.textsEnd} />
       </div>
     );
