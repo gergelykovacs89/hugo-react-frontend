@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { fetchChildTexts } from "../../actions/text";
 import { withStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -8,8 +10,7 @@ import {
   Divider,
   ListItem,
   ListItemIcon,
-  ListItemText,
-  Paper
+  ListItemText
 } from "@material-ui/core";
 import {
   AccountCircle,
@@ -18,15 +19,13 @@ import {
   Code,
   Close
 } from "@material-ui/icons";
+import TextGrid from "./TextGrid";
 
 const styles = {
-  list: {
-    width: "auto"
+  drawerPaper: {
+    width: "95%",
+    padding: 20
   },
-  forksPaper: {
-    position: "absolute",
-    marginLeft: 250
-  }
 };
 
 class TemporaryDrawer extends React.Component {
@@ -52,6 +51,7 @@ class TemporaryDrawer extends React.Component {
       left: true,
       parentTextId: parentTextId
     });
+    this.props.fetchChildTexts(parentTextId);
   };
 
   componentWillReceiveProps(nextProps) {
@@ -70,10 +70,10 @@ class TemporaryDrawer extends React.Component {
         <Grid
           justify="space-between"
           container
-          spacing={24}
           alignItems="flex-start"
+          className={classes.container}
         >
-          <Grid item>
+          <Grid item xs={12} sm={5} md={4} lg={3}>
             <List>
               <ListItem button>
                 <ListItemIcon>
@@ -112,8 +112,12 @@ class TemporaryDrawer extends React.Component {
               </ListItem>
             </List>
           </Grid>
-          <Grid item>
-            <Paper>TODO show fork texts</Paper>
+          <Grid item xs={12} sm={7} md={8} lg={9}>
+            {!this.props.childTexts ? (
+              this.circularProgress
+            ) : (
+              <TextGrid childTexts={this.props.childTexts} />
+            )}
           </Grid>
         </Grid>
       </div>
@@ -121,7 +125,13 @@ class TemporaryDrawer extends React.Component {
 
     return (
       <div>
-        <Drawer open={this.state.left} onClose={this.toggleDrawer(false)}>
+        <Drawer
+          open={this.state.left}
+          onClose={this.toggleDrawer(false)}
+          classes={{
+            paper: classes.drawerPaper
+          }}
+        >
           <div tabIndex={0} role="button" onKeyDown={this.toggleDrawer(false)}>
             {sideList}
           </div>
@@ -135,4 +145,15 @@ TemporaryDrawer.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(TemporaryDrawer);
+const mapStateToProps = (state, ownProps) => {
+  return {
+    childTexts: state.navigation.currentlyVisitedChildTexts
+  };
+};
+
+const DrawerWithStyles = withStyles(styles)(TemporaryDrawer);
+
+export default connect(
+  mapStateToProps,
+  { fetchChildTexts }
+)(DrawerWithStyles);

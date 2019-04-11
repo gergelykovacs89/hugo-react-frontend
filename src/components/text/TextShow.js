@@ -61,7 +61,8 @@ class TextShow extends React.Component {
       editorState: EditorState.createEmpty(),
       readerState: EditorState.createEmpty(),
       editMode: props.editMode,
-      isFull: props.isFull
+      isFull: props.isFull,
+      deleting: false
     };
   }
 
@@ -96,7 +97,7 @@ class TextShow extends React.Component {
   };
 
   renderEditButton = text => {
-    if (this.props.selfAuthorId === text._authorId) {
+    if (this.props.selfAuthorId === text._authorId._id) {
       return (
         <Fragment>
           <IconButton
@@ -163,7 +164,7 @@ class TextShow extends React.Component {
           alignItems="flex-start"
         >
           <Grid item xs={12} md={2}>
-            <AuthorDetailByText author={this.props.text.author} noName={true} />
+            <AuthorDetailByText author={this.props.text._authorId} noName={true} />
             {this.props.isLast ? this.renderBrowseButton() : null}
           </Grid>
           <Grid item xs={12} md={8}>
@@ -188,6 +189,7 @@ class TextShow extends React.Component {
 
   onCancel = () => {
     if (this.state.isFull) {
+      this.setState({ deleting: true });
       this.props.deleteTextById(
         this.props.text._id,
         this.props.text._parentTextId
@@ -243,7 +245,7 @@ class TextShow extends React.Component {
   );
 
   render() {
-    if (!this.props.text || !this.state.readerState) {
+    if (!this.props.text || !this.state.readerState || this.state.deleting) {
       return this.circularProgress;
     }
     const { classes, isFull } = this.props;

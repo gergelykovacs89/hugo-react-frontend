@@ -12,23 +12,26 @@ const styles = {
 };
 
 function AuthorDetailByText(props) {
-  const { classes, author, noName } = props;
+  const { classes, author, noName, noImg } = props;
   return (
     <Link to={`/a/${author._id}`} component={RouterLink} underline="none">
       <ButtonBase component={Button}>
-        <Avatar
-          alt={author.name}
-          src={author.imgPath}
-          className={classes.avatar}
-        />
-        {!noName ? <Typography
-          variant="subtitle1"
-          color="default"
-          style={{ fontSize: "2.5vh", textTransform: "none" }}
-        >
-          {author.name}
-        </Typography> : null}
-        
+        {!noImg ? (
+          <Avatar
+            alt={author.name}
+            src={author.imgPath}
+            className={classes.avatar}
+          />
+        ) : null}
+        {!noName ? (
+          <Typography
+            variant="subtitle1"
+            color="default"
+            style={{ fontSize: "2.5vh", textTransform: "none" }}
+          >
+            {author.name}
+          </Typography>
+        ) : null}
       </ButtonBase>
     </Link>
   );
