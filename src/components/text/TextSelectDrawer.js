@@ -1,12 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
+import {
+  Grid,
+  Drawer,
+  List,
+  Divider,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Paper
+} from "@material-ui/core";
 import {
   AccountCircle,
   AccountCircleOutlined,
@@ -17,10 +21,11 @@ import {
 
 const styles = {
   list: {
-    width: 250
-  },
-  fullList: {
     width: "auto"
+  },
+  forksPaper: {
+    position: "absolute",
+    marginLeft: 250
   }
 };
 
@@ -62,43 +67,55 @@ class TemporaryDrawer extends React.Component {
     const { classes } = this.props;
     const sideList = (
       <div className={classes.list}>
-        <List>
-          <ListItem button>
-            <ListItemIcon>
-              <ShareOutlined />
-            </ListItemIcon>
-            <ListItemText primary={"all forks"} />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <AccountCircle />
-            </ListItemIcon>
-            <ListItemText primary={"from this author"} />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <AccountCircleOutlined />
-            </ListItemIcon>
-            <ListItemText primary={"from me"} />
-          </ListItem>
-        </List>
-        <Divider />
-        <List>
-          {["tag1", "tag2", "tag3"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                <Code />
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-          <ListItem button key={"close"} onClick={this.toggleDrawer(false)}>
-            <ListItemIcon>
-              <Close />
-            </ListItemIcon>
-            <ListItemText primary={"close"} />
-          </ListItem>
-        </List>
+        <Grid
+          justify="space-between"
+          container
+          spacing={24}
+          alignItems="flex-start"
+        >
+          <Grid item>
+            <List>
+              <ListItem button>
+                <ListItemIcon>
+                  <ShareOutlined />
+                </ListItemIcon>
+                <ListItemText primary={"all forks"} />
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <AccountCircle />
+                </ListItemIcon>
+                <ListItemText primary={"from this author"} />
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <AccountCircleOutlined />
+                </ListItemIcon>
+                <ListItemText primary={"from me"} />
+              </ListItem>
+            </List>
+            <Divider />
+            <List>
+              {["tag1", "tag2", "tag3"].map((text, index) => (
+                <ListItem button key={text}>
+                  <ListItemIcon>
+                    <Code />
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItem>
+              ))}
+              <ListItem button key={"close"} onClick={this.toggleDrawer(false)}>
+                <ListItemIcon>
+                  <Close />
+                </ListItemIcon>
+                <ListItemText primary={"close"} />
+              </ListItem>
+            </List>
+          </Grid>
+          <Grid item>
+            <Paper>TODO show fork texts</Paper>
+          </Grid>
+        </Grid>
       </div>
     );
 
