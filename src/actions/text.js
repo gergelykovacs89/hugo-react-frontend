@@ -6,7 +6,7 @@ export const fetchText = textId => async (dispatch, getState) => {
   try {
     setAuthToken(localStorage.getItem("jwtToken"));
     const response = await textApi.get(`/${textId}`);
-    if (response.data._authorId === localStorage.getItem("authorId")) {
+    if (response.data._authorId._id === localStorage.getItem("authorId")) {
       dispatch({ type: textConstants.ADD_TEXT, payload: response.data });
       dispatch({ type: textConstants.LOAD_TEXT, payload: response.data });
     } else {
