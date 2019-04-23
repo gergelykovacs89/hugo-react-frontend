@@ -33,6 +33,23 @@ export const updateText = (newTextState, textId) => async dispatch => {
   }
 };
 
+export const selectForkFromDrawer = textId => async (dispatch, getState) => {
+  let textToLoad = await getState().navigation.currentlyVisitedChildTexts[
+    textId
+  ];
+  dispatch({ type: textConstants.LOAD_TEXT, payload: textToLoad });
+};
+
+export const unLoadTextFromStoryWriter = (textId, parentId) => async (
+  dispatch,
+  getState
+) => {
+  dispatch({
+    type: textConstants.UNLOAD_TEXT,
+    payload: { textId, parentId }
+  });
+};
+
 export const forkText = (text, _parentTextId, _authorId) => async (
   dispatch,
   getState
@@ -79,7 +96,10 @@ export const deleteTextById = (textId, parentId) => async (
 export const fetchChildTexts = _parentTextId => async (dispatch, getState) => {
   try {
     const response = await textApi.get(`/children/${_parentTextId}`);
-    dispatch({ type: textConstants.SET_CHILD_TEXTS, payload: response.data.childTexts });
+    dispatch({
+      type: textConstants.SET_CHILD_TEXTS,
+      payload: response.data.childTexts
+    });
   } catch (error) {
     console.log(error);
   }

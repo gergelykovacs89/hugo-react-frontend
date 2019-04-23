@@ -9,7 +9,7 @@ import {
   Button,
   IconButton
 } from "@material-ui/core";
-import { Edit, ShareOutlined } from "@material-ui/icons";
+import { Edit, ShareOutlined, SettingsBackupRestore } from "@material-ui/icons";
 import SaveIcon from "@material-ui/icons/Save";
 import CustomTextEditor from "../text/CustomTextEditor";
 import { convertToRaw } from "draft-js";
@@ -17,7 +17,8 @@ import {
   fetchText,
   updateText,
   forkText,
-  deleteTextById
+  deleteTextById,
+  unLoadTextFromStoryWriter
 } from "../../actions/text";
 import AuthorDetailByText from "../authors/AuthorDetailByText";
 
@@ -37,16 +38,25 @@ const styles = theme => ({
     "&:hover": {
       backgroundColor: "#e6b800"
     },
-    marginRight: "1vw",
-    [theme.breakpoints.up("sm")]: {
-      marginBottom: "1vw"
-    }
+    marginRight: "1vw"
+  },
+  backButton: {
+    color: "black",
+    backgroundColor: "#ed2828",
+    "&:hover": {
+      backgroundColor: "#990101"
+    },
+    marginRight: "1vw"
   },
   cancelButton: {
-    marginRight: "1vw",
-    [theme.breakpoints.up("sm")]: {
-      marginBottom: "1vw"
-    }
+    marginRight: "1vw"
+  },
+  forkButton: {
+    backgroundColor: "#0aaf0a",
+    "&:hover": {
+      backgroundColor: "#017701"
+    },
+    marginRight: "1vw"
   },
   saveButton: {},
   iconSmall: {
@@ -99,7 +109,7 @@ class TextShow extends React.Component {
   renderEditButton = text => {
     if (this.props.selfAuthorId === text._authorId._id) {
       return (
-        <Fragment>
+        <Grid item>
           <IconButton
             className={this.props.classes.editButton}
             variant="contained"
@@ -112,21 +122,36 @@ class TextShow extends React.Component {
           >
             <Edit />
           </IconButton>
-        </Fragment>
+        </Grid>
       );
     }
   };
 
+  renderBackButton = () => {
+    return (
+      <Grid item>
+        <IconButton
+          className={this.props.classes.backButton}
+          variant="contained"
+          onClick={() => this.onBack()}
+        >
+          <SettingsBackupRestore />
+        </IconButton>
+      </Grid>
+    );
+  };
+
   renderForkButton = () => {
     return (
-      <Fragment>
+      <Grid item>
         <Button
           variant="contained"
+          className={this.props.classes.forkButton}
           onClick={() => this.forkText(this.props.text._id)}
         >
           <ShareOutlined /> Fork it
         </Button>
-      </Fragment>
+      </Grid>
     );
   };
 
@@ -145,12 +170,14 @@ class TextShow extends React.Component {
 
   renderBrowseButton = () => {
     return (
-      <Button
-        variant="contained"
-        onClick={() => this.onBrowseForks(this.props.textId)}
-      >
-        Browse forks
-      </Button>
+      <Grid item>
+        <Button
+          variant="contained"
+          onClick={() => this.onBrowseForks(this.props.textId)}
+        >
+          Browse forks
+        </Button>
+      </Grid>
     );
   };
 
@@ -161,22 +188,44 @@ class TextShow extends React.Component {
           justify="space-around"
           container
           spacing={24}
-          alignItems="flex-start"
+          alignItems="stretch"
         >
-          <Grid item xs={12} md={2}>
-            <AuthorDetailByText author={this.props.text._authorId} noName={true} />
-            {this.props.isLast ? this.renderBrowseButton() : null}
+          <Grid item xs={12}>
+            <Grid
+              justify="space-between"
+              container
+              spacing={24}
+              alignItems="flex-start"
+            >
+              <Grid item>
+                <AuthorDetailByText
+                  author={this.props.text._authorId}
+                  noName={true}
+                />
+              </Grid>
+              {this.renderEditButton(this.props.text)}
+              {this.props.isLast && !this.props.isRootText
+                ? this.renderBackButton()
+                : null}
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12}>
             <Editor
               editorState={this.state.readerState}
               onChange={this.handleEditorChange}
               readOnly={true}
             />
           </Grid>
-          <Grid item xs={12} md={2}>
-            {this.renderEditButton(this.props.text)}
-            {this.props.isLast ? this.renderForkButton() : null}
+          <Grid item xs={12}>
+            <Grid
+              justify="space-between"
+              container
+              spacing={24}
+              alignItems="flex-start"
+            >
+              {this.props.isLast ? this.renderBrowseButton() : null}
+              {this.props.isLast ? this.renderForkButton() : null}
+            </Grid>
           </Grid>
         </Grid>
       </Paper>
@@ -201,6 +250,13 @@ class TextShow extends React.Component {
     });
   };
 
+  onBack = () => {
+    this.props.unLoadTextFromStoryWriter(
+      this.props.text._id,
+      this.props.text._parentTextId
+    );
+  };
+
   editRender = classes => (
     <Fragment>
       <Paper className={classes.paper}>
@@ -210,10 +266,7 @@ class TextShow extends React.Component {
           spacing={24}
           alignItems="flex-start"
         >
-          <Grid item xs={12} md={2}>
-            {/* TODO nextTextLoading??? */}
-          </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12}>
             <CustomTextEditor
               editorState={this.state.editorState}
               onEditorChange={this.handleEditorChange}
@@ -221,23 +274,34 @@ class TextShow extends React.Component {
               autofocus={this.state.isFull}
             />
           </Grid>
-          <Grid item xs={12} md={2}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={this.onCancel}
-              className={classes.cancelButton}
+          <Grid item xs={12}>
+            <Grid
+              justify="space-between"
+              container
+              spacing={24}
+              alignItems="flex-start"
             >
-              cancel
-            </Button>
-            <Button
-              variant="contained"
-              onClick={this.handleSave}
-              className={classes.saveButton}
-            >
-              <SaveIcon className={classes.iconSmall} />
-              save
-            </Button>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={this.onCancel}
+                  className={classes.cancelButton}
+                >
+                  cancel
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={this.handleSave}
+                  className={classes.saveButton}
+                >
+                  <SaveIcon className={classes.iconSmall} />
+                  save
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Paper>
@@ -265,11 +329,14 @@ const mapStateToProps = (state, ownProps) => {
   return {
     text: state.navigation.currentlyVisitedStoryRootTexts[ownProps.textId],
     selfAuthorId: state.user.authorId,
-    isLast: state.navigation.currentLastTextIdOfStory === ownProps.textId
+    isLast: state.navigation.currentLastTextIdOfStory === ownProps.textId,
+    isRootText:
+      state.navigation.currentlyVisitedStoryRootDetail._rootTextId ===
+      ownProps.textId
   };
 };
 
 export default connect(
   mapStateToProps,
-  { fetchText, updateText, forkText, deleteTextById }
+  { fetchText, updateText, forkText, deleteTextById, unLoadTextFromStoryWriter }
 )(textShowWithStyles);

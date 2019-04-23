@@ -6,7 +6,7 @@ class TextGrid extends React.Component {
   renderRootList = (childTexts) => {
     return childTexts.map(text => (
       <Grid item key={text._id} xs={12} sm={6} md={4} lg={4}>
-        <TextCard text={text} />
+        <TextCard text={text} onSelectFork={this.props.onSelectFork}/>
       </Grid>
     ));
   };

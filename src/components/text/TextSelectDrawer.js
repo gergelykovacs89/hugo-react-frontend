@@ -25,7 +25,7 @@ const styles = {
   drawerPaper: {
     width: "95%",
     padding: 20
-  },
+  }
 };
 
 class TemporaryDrawer extends React.Component {
@@ -46,6 +46,14 @@ class TemporaryDrawer extends React.Component {
     }
   };
 
+  closeDrawer = () => {
+    this.setState({
+      left: false,
+      parentTextId: null
+    });
+    this.props.onClose();
+  };
+
   openDrawer = parentTextId => {
     this.setState({
       left: true,
@@ -62,6 +70,11 @@ class TemporaryDrawer extends React.Component {
       this.openDrawer(nextProps.parentTextId);
     }
   }
+
+  onSelectFork = textId => {
+    this.closeDrawer();
+    this.props.onSelectFork(textId);
+  };
 
   render() {
     const { classes } = this.props;
@@ -116,7 +129,10 @@ class TemporaryDrawer extends React.Component {
             {!this.props.childTexts ? (
               this.circularProgress
             ) : (
-              <TextGrid childTexts={this.props.childTexts} />
+              <TextGrid
+                childTexts={this.props.childTexts}
+                onSelectFork={this.onSelectFork}
+              />
             )}
           </Grid>
         </Grid>
@@ -146,8 +162,9 @@ TemporaryDrawer.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  let childTexts = state.navigation.currentlyVisitedChildTexts;
   return {
-    childTexts: state.navigation.currentlyVisitedChildTexts
+    childTexts: childTexts === undefined ? null : Object.values(childTexts)
   };
 };
 

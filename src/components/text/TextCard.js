@@ -6,6 +6,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import AuthorDetailByText from "../authors/AuthorDetailByText";
+import { CardActionArea, CardHeader } from "@material-ui/core";
 
 const styles = {
   card: {},
@@ -24,12 +25,18 @@ const styles = {
 };
 
 function TextCard(props) {
-  const { classes, text } = props;
+  const { classes, text, onSelectFork } = props;
   return (
     <Card className={classes.card}>
-      <CardContent>
-        <Typography component="p">{getPreview(text)}</Typography>
-      </CardContent>
+      <CardActionArea onClick={() => onSelectFork(text._id)}>
+        <CardHeader
+          subheader={`forked ${0} || votes ${0} || in stories ${0}`}
+          subheaderTypographyProps={{ align: "center" }}
+        />
+        <CardContent>
+          <Typography component="p">{getPreview(text)}</Typography>
+        </CardContent>
+      </CardActionArea>
       <CardActions>
         <Typography
           className={classes.author}

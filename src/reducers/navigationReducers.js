@@ -103,7 +103,9 @@ export default (state = INTIAL_STATE, action) => {
         }
       };
     case textConstants.SET_CHILD_TEXTS:
-      return { ...state, currentlyVisitedChildTexts: action.payload };
+      return { ...state, currentlyVisitedChildTexts: {
+          ..._.mapKeys(action.payload, "_id")
+        }};
     case textConstants.UNSET_CHILD_TEXTS:
       return { ...state, currentlyVisitedChildTexts: {} };
     default:

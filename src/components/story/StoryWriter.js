@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import { getStoryRoot, unSetStoryRoot } from "../../actions/story";
 import { unSetAuthor } from "../../actions";
+import { selectForkFromDrawer } from "../../actions/text";
 import HeaderAvatar from "../layouts/HeaderAvatar";
 import {
   Paper,
@@ -123,14 +124,28 @@ class StoryWriter extends React.Component {
     this.setState({ parentTextId: null });
   };
 
+  onSelectFork = textId => {
+    this.props.selectForkFromDrawer(textId);
+  };
+
   renderTexts = () => {
     return this.props.texts.map(text =>
-      text._id === this.props.storyRoot._rootTextId ? null : (
+      text._id === this.props.storyRoot._rootTextId ? null : JSON.parse(
+          text.text
+        ).blocks[0].text === "" ? (
         <TextShow
           key={text._id}
           textId={text._id}
           editMode={this.props.lastTextId === text._id}
           isFull={this.props.lastTextId === text._id}
+          handleBrowseForks={this.handleBrowseForks}
+        />
+      ) : (
+        <TextShow
+          key={text._id}
+          textId={text._id}
+          editMode={false}
+          isFull={false}
           handleBrowseForks={this.handleBrowseForks}
         />
       )
@@ -213,6 +228,7 @@ class StoryWriter extends React.Component {
         <TextSelectDrawer
           parentTextId={this.state.parentTextId}
           onClose={this.onCloseBrowseForks}
+          onSelectFork={this.onSelectFork}
         />
         <div ref={this.textsEnd} />
       </div>
@@ -234,5 +250,5 @@ const StoryWriterWithStyles = withStyles(styles)(StoryWriter);
 
 export default connect(
   mapStateToProps,
-  { getStoryRoot, unSetStoryRoot, unSetAuthor }
+  { getStoryRoot, unSetStoryRoot, unSetAuthor, selectForkFromDrawer }
 )(StoryWriterWithStyles);
