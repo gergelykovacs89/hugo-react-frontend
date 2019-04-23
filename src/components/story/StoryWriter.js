@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import { getStoryRoot, unSetStoryRoot } from "../../actions/story";
 import { unSetAuthor } from "../../actions";
-import { selectForkFromDrawer } from "../../actions/text";
+import { selectForkFromDrawer, unSetStoryRootTexts } from "../../actions/text";
 import HeaderAvatar from "../layouts/HeaderAvatar";
 import {
   Paper,
@@ -80,6 +80,7 @@ class StoryWriter extends React.Component {
   componentWillUnmount() {
     this.props.unSetStoryRoot();
     this.props.unSetAuthor();
+    this.props.unSetStoryRootTexts();
   }
 
   onFollow = () => {
@@ -196,25 +197,28 @@ class StoryWriter extends React.Component {
             </Grid>
             <Grid item xs={12} md={6}>
               <Grid
-                justify="space-between"
                 container
-                spacing={24}
-                alignItems="center"
+                direction="row"
+                alignItems="flex-start"
+                justify="space-evenly"
               >
                 <Grid item>
-                  <Typography variant="subtitle2">
-                    <RemoveRedEye /> 0 watched
-                  </Typography>
+                  <RemoveRedEye />
                 </Grid>
                 <Grid item>
-                  <Typography variant="subtitle2">
-                    <ThumbUpOutlined /> 0 votes
-                  </Typography>
+                  <Typography variant="subtitle2">0 watched</Typography>
                 </Grid>
                 <Grid item>
-                  <Typography variant="subtitle2">
-                    <ShareOutlined /> 0 forks
-                  </Typography>
+                  <ThumbUpOutlined />
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle2">0 votes</Typography>
+                </Grid>
+                <Grid item>
+                  <ShareOutlined />
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle2">0 forks</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -250,5 +254,11 @@ const StoryWriterWithStyles = withStyles(styles)(StoryWriter);
 
 export default connect(
   mapStateToProps,
-  { getStoryRoot, unSetStoryRoot, unSetAuthor, selectForkFromDrawer }
+  {
+    getStoryRoot,
+    unSetStoryRoot,
+    unSetAuthor,
+    selectForkFromDrawer,
+    unSetStoryRootTexts
+  }
 )(StoryWriterWithStyles);
