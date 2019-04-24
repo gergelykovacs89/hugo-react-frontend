@@ -7,6 +7,7 @@ import {
   unSetAuthor,
   getStoryRootsForVisitedAuthor
 } from "../../actions";
+import { getTextsByAuthorId, unSetVisitedAuthorTexts } from "../../actions/text";
 import {
   Paper,
   Typography,
@@ -73,17 +74,20 @@ class AuthorDetail extends React.Component {
   componentDidMount() {
     this.props.getAuthor(this.props.match.params.id);
     this.props.getStoryRootsForVisitedAuthor(this.props.match.params.id);
+    this.props.getTextsByAuthorId(this.props.match.params.id);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.match.params.id !== this.props.match.params.id) {
       this.props.getAuthor(nextProps.match.params.id);
       this.props.getStoryRootsForVisitedAuthor(this.props.match.params.id);
+      this.props.getTextsByAuthorId(this.props.match.params.id);
     }
   }
 
   componentWillUnmount() {
     this.props.unSetAuthor();
+    this.props.unSetVisitedAuthorTexts();
   }
 
   onFollow = () => {
@@ -155,10 +159,21 @@ class AuthorDetail extends React.Component {
   }
 
   render() {
-    if (!this.props.author || !this.props.selectedAuthor) {
+    if (
+      !this.props.author ||
+      !this.props.selectedAuthor ||
+      !this.props.authorTexts
+    ) {
       return this.circularProgress;
     }
-    const { author, selectedAuthor, classes, isSelf, storyRoots } = this.props;
+    const {
+      author,
+      selectedAuthor,
+      classes,
+      isSelf,
+      storyRoots,
+      authorTexts
+    } = this.props;
     const isOwn = this.props.author._id === this.props.selectedAuthor._id;
     return (
       <div className={classes.root}>
@@ -197,7 +212,11 @@ class AuthorDetail extends React.Component {
           </Grid>
         </Paper>
         <Paper className={classes.paper}>
-          <AuthorTabs storyRoots={storyRoots} isSelf={isOwn} />
+          <AuthorTabs
+            storyRoots={storyRoots}
+            isSelf={isOwn}
+            authorTexts={authorTexts}
+          />
         </Paper>
       </div>
     );
@@ -205,11 +224,18 @@ class AuthorDetail extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  let authorTexts =
+    ownProps.match.params.id === state.user.authorId
+      ? state.texts
+      : state.navigation.currentlyVisitedAuthorTexts;
   return {
     author: state.navigation.currentlyVisitedAuthorDetail,
     selectedAuthor: state.authors[state.user.authorId],
     isSelf: state.authors[ownProps.match.params.id] ? true : false,
-    storyRoots: Object.values(state.navigation.currentlyVisitedAuthorStoryRoots)
+    storyRoots: Object.values(
+      state.navigation.currentlyVisitedAuthorStoryRoots
+    ),
+    authorTexts: Object.values(authorTexts)
   };
 };
 
@@ -222,6 +248,8 @@ export default connect(
     followAuthor,
     unFollowAuthor,
     unSetAuthor,
-    getStoryRootsForVisitedAuthor
+    getStoryRootsForVisitedAuthor,
+    getTextsByAuthorId,
+    unSetVisitedAuthorTexts
   }
 )(AuthorDetailWithStyles);

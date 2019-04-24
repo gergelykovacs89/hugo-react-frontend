@@ -106,3 +106,29 @@ export const fetchChildTexts = _parentTextId => async (dispatch, getState) => {
 export const unSetStoryRootTexts = () => dispatch => {
   dispatch({ type: textConstants.UNSET_CHILD_TEXTS });
 };
+
+export const unSetVisitedAuthorTexts = () => dispatch => {
+  dispatch({ type: textConstants.UNSET_VISITED_AUTHOR_TEXTS });
+};
+
+export const getTextsByAuthorId = authorId => async dispatch => {
+  try {
+    const response = await textApi.get(`/author/${authorId}`);
+    if (
+      response.data.authorTexts[0]._authorId._id ===
+      localStorage.getItem("authorId")
+    ) {
+      dispatch({
+        type: textConstants.SET_TEXTS,
+        payload: response.data.authorTexts
+      });
+    } else {
+      dispatch({
+        type: textConstants.SET_VISITED_AUTHOR_TEXTS,
+        payload: response.data.authorTexts
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

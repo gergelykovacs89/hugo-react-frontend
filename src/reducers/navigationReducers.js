@@ -103,11 +103,23 @@ export default (state = INTIAL_STATE, action) => {
         }
       };
     case textConstants.SET_CHILD_TEXTS:
-      return { ...state, currentlyVisitedChildTexts: {
+      return {
+        ...state,
+        currentlyVisitedChildTexts: {
           ..._.mapKeys(action.payload, "_id")
-        }};
+        }
+      };
     case textConstants.UNSET_CHILD_TEXTS:
       return { ...state, currentlyVisitedChildTexts: {} };
+    case textConstants.SET_VISITED_AUTHOR_TEXTS:
+      return {
+        ...state,
+        currentlyVisitedAuthorTexts: {
+          ..._.mapKeys(action.payload, "_id")
+        }
+      };
+    case textConstants.UNSET_VISITED_AUTHOR_TEXTS:
+      return { ...state, currentlyVisitedAuthorTexts: {} };
     default:
       return state;
   }

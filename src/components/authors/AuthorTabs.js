@@ -7,6 +7,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import StoryRootGrid from "../story/StoryRootGrid";
+import TextGrid from "../text/TextGrid";
 
 function TabContainer({ children, dir }) {
   return (
@@ -40,8 +41,12 @@ class AuthorTabs extends React.Component {
     this.setState({ value: index });
   };
 
+  selectText = textId => {
+    console.log(textId);
+  };
+
   render() {
-    const { classes, theme, storyRoots, isSelf } = this.props;
+    const { classes, theme, storyRoots, isSelf, authorTexts } = this.props;
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">
@@ -61,11 +66,17 @@ class AuthorTabs extends React.Component {
           axis={theme.direction === "rtl" ? "x-reverse" : "x"}
           index={this.state.value}
           onChangeIndex={this.handleChangeIndex}
+          action={actions => {
+            this.swipeableActions = actions;
+          }}
+          animateHeight
         >
           <TabContainer dir={theme.direction}>
-            <StoryRootGrid storyRoots={storyRoots} isSelf={isSelf}/>
+            <StoryRootGrid storyRoots={storyRoots} isSelf={isSelf} />
           </TabContainer>
-          <TabContainer dir={theme.direction}>TODO texts</TabContainer>
+          <TabContainer dir={theme.direction}>
+            <TextGrid texts={authorTexts} onSelectFork={this.selectText} />
+          </TabContainer>
           <TabContainer dir={theme.direction}>TODO saved stories</TabContainer>
         </SwipeableViews>
       </div>

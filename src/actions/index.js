@@ -1,4 +1,4 @@
-import {userConstants, authorConstants, storyRootConstants} from "./types";
+import { userConstants, authorConstants, storyRootConstants } from "./types";
 import users from "../apis/users";
 import authors from "../apis/authors";
 import story from "../apis/story";
@@ -6,11 +6,15 @@ import setAuthToken from "../helpers/setAuthToken";
 import history from "../history";
 import jwt_decode from "jwt-decode";
 import { getStoryRootsByAuthorId } from "../actions/story";
+import { getTextsByAuthorId } from "../actions/text";
 
 export const registerRequest = formValues => async dispatch => {
   try {
     const response = await users.post("/register", formValues);
-    dispatch({ type: userConstants.REGISTER_SUCCESS, payload: response.data.message });
+    dispatch({
+      type: userConstants.REGISTER_SUCCESS,
+      payload: response.data.message
+    });
     history.push("/login");
   } catch (error) {
     handleFormErrors(error, dispatch);
@@ -30,7 +34,10 @@ export const loginRequest = formValues => async dispatch => {
     localStorage.setItem("jwtToken", response.data.jwtToken);
     const decoded = jwt_decode(response.data.jwtToken);
     dispatch({ type: userConstants.LOGIN_SUCCESS, payload: decoded });
-    dispatch({ type: userConstants.SET_AUTHORS, payload: response.data.authors });
+    dispatch({
+      type: userConstants.SET_AUTHORS,
+      payload: response.data.authors
+    });
     if (localStorage.getItem("authorId")) {
       dispatch(selectAuthor(localStorage.getItem("authorId"), false));
     } else {
@@ -52,7 +59,10 @@ export const logout = () => dispatch => {
 export const addAuthor = formValues => async dispatch => {
   try {
     const response = await authors.post("/new-author", formValues);
-    dispatch({ type: authorConstants.ADD_AUTHOR_SUCCESS, payload: response.data });
+    dispatch({
+      type: authorConstants.ADD_AUTHOR_SUCCESS,
+      payload: response.data
+    });
     history.push("/select-author");
   } catch (error) {
     handleFormErrors(error, dispatch);
@@ -76,7 +86,10 @@ export const fetchAuthor = authorId => async dispatch => {
   try {
     setAuthToken(localStorage.getItem("jwtToken"));
     const response = await authors.get(`/get-author/${authorId}`);
-    dispatch({ type: authorConstants.FETCH_AUTHOR, payload: response.data.author });
+    dispatch({
+      type: authorConstants.FETCH_AUTHOR,
+      payload: response.data.author
+    });
   } catch (error) {
     handleFormErrors(error, dispatch);
   }
@@ -85,7 +98,10 @@ export const fetchAuthor = authorId => async dispatch => {
 export const getAuthor = authorId => async dispatch => {
   try {
     const response = await authors.get(`/get-author-detail/${authorId}`);
-    dispatch({ type: authorConstants.GET_AUTHOR, payload: response.data.author });
+    dispatch({
+      type: authorConstants.GET_AUTHOR,
+      payload: response.data.author
+    });
   } catch (error) {
     handleFormErrors(error, dispatch);
   }
@@ -111,7 +127,10 @@ export const unSetAuthor = () => dispatch => {
 export const deleteAuthor = authorId => async dispatch => {
   try {
     await authors.delete(`/delete-author/${authorId}`);
-    dispatch({ type: authorConstants.DELETE_AUTHOR_SUCCESS, payload: authorId });
+    dispatch({
+      type: authorConstants.DELETE_AUTHOR_SUCCESS,
+      payload: authorId
+    });
   } catch (error) {
     handleFormErrors(error, dispatch);
   }
@@ -160,6 +179,7 @@ export const unFollowAuthor = (selectAuthorId, authorToUnFollowId) => async (
 export const selectAuthor = (authorId, redirect) => dispatch => {
   localStorage.setItem("authorId", authorId);
   dispatch(getStoryRootsByAuthorId(authorId));
+  dispatch(getTextsByAuthorId(authorId));
   dispatch({ type: authorConstants.SELECT_AUTHOR, payload: authorId });
   if (redirect) {
     history.push(`/a/${authorId}`);

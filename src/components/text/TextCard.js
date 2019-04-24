@@ -25,7 +25,7 @@ const styles = {
 };
 
 function TextCard(props) {
-  const { classes, text, onSelectFork } = props;
+  const { classes, text, onSelectFork, showAuthor } = props;
   return (
     <Card className={classes.card}>
       <CardActionArea onClick={() => onSelectFork(text._id)}>
@@ -37,15 +37,17 @@ function TextCard(props) {
           <Typography component="p">{getPreview(text)}</Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
-        <Typography
-          className={classes.author}
-          color="textSecondary"
-          gutterBottom
-        >
-          by: <AuthorDetailByText author={text._authorId} noImg={true} />
-        </Typography>
-      </CardActions>
+      {showAuthor ? (
+        <CardActions>
+          <Typography
+            className={classes.author}
+            color="textSecondary"
+            gutterBottom
+          >
+            by: <AuthorDetailByText author={text._authorId} noImg={true} />
+          </Typography>
+        </CardActions>
+      ) : null}
     </Card>
   );
 }

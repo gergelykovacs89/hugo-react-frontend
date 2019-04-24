@@ -130,7 +130,7 @@ class TemporaryDrawer extends React.Component {
               this.circularProgress
             ) : (
               <TextGrid
-                childTexts={this.props.childTexts}
+                texts={this.props.childTexts}
                 onSelectFork={this.onSelectFork}
               />
             )}
